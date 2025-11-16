@@ -42,6 +42,7 @@ public class ArtworkController : Controller
     /// <summary>
     /// Display a paginated list of artwork
     /// </summary>
+    [AllowAnonymous]
     public async Task<IActionResult> Index(int page = 1, int limit = 12)
     {
         try
@@ -68,9 +69,12 @@ public class ArtworkController : Controller
             _logger.LogError(ex, "Error fetching artwork");
             return View("Error");
         }
-    }    /// <summary>
-         /// Display details for a specific artwork
-         /// </summary>
+    }
+
+    /// <summary>
+    /// Display details for a specific artwork
+    /// </summary>
+    [AllowAnonymous]
     public async Task<IActionResult> Details(int id, string? returnUrl = null)
     {
         try
@@ -98,6 +102,7 @@ public class ArtworkController : Controller
     /// <summary>
     /// Search for artwork
     /// </summary>
+    [AllowAnonymous]
     public async Task<IActionResult> Search(string q, int page = 1, int limit = 12)
     {
         try
@@ -137,6 +142,7 @@ public class ArtworkController : Controller
     /// <summary>
     /// Display featured/highlighted artwork
     /// </summary>
+    [AllowAnonymous]
     public async Task<IActionResult> Featured()
     {
         try
@@ -200,6 +206,7 @@ public class ArtworkController : Controller
     /// Get reviews for an artwork (AJAX endpoint)
     /// </summary>
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> GetReviews(int artworkId)
     {
         try
@@ -298,6 +305,7 @@ public class ArtworkController : Controller
     /// Chat endpoint for AI-powered artwork discussions
     /// </summary>
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> Chat(string message, int artworkId, string persona = "Curator")
     {
         try
@@ -331,7 +339,9 @@ public class ArtworkController : Controller
             };
 
             _logger.LogInformation("Processing chat request for artwork {ArtworkId} with message: {Message}",
-                request.ArtworkId, request.Message); var response = await _chatAgent.ChatAsync(request);
+                request.ArtworkId, request.Message);
+
+            var response = await _chatAgent.ChatAsync(request);
 
             return Json(response);
         }
@@ -351,6 +361,7 @@ public class ArtworkController : Controller
     /// Generate conversation starters for an artwork
     /// </summary>
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> ConversationStarters(int artworkId, string persona = "Curator")
     {
         try
