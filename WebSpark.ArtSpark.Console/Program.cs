@@ -11,9 +11,6 @@ using WebSpark.HttpClientUtility.StringConverter;
 // Setup DI
 var services = new ServiceCollection();
 
-// Add HttpContextAccessor for Tag Helper support
-services.AddHttpContextAccessor();
-
 // Add HttpClient factory (required for WebSpark.HttpClientUtility)
 services.AddHttpClient();
 
@@ -139,6 +136,7 @@ catch (Exception ex)
 
 System.Console.WriteLine("Press any key to exit...");
 System.Console.ReadLine();
+
 
 
 
