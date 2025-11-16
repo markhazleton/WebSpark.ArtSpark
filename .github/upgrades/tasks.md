@@ -4,7 +4,7 @@
 
 This scenario upgrades the WebSpark.ArtSpark solution from .NET 9.0 to .NET 10.0 (Preview) across 5 projects, updating 11 NuGet packages, and verifying build and test success. Tasks are batched by dependency tier per strategy, with automated verification and commit actions.
 
-**Progress**: 2/8 tasks complete (25%) ![25%](https://progress-bar.xyz/25)
+**Progress**: 3/8 tasks complete (38%) ![38%](https://progress-bar.xyz/38)
 
 ## Tasks
 
@@ -24,26 +24,26 @@ This scenario upgrades the WebSpark.ArtSpark solution from .NET 9.0 to .NET 10.0
 - [✓] (3) Commit changes with message: "TASK-002: Upgrade Tier 1 projects to .NET 10.0"
 - [✓] (4) Changes committed successfully (**Verify**)
 
-### [▶] TASK-003: Upgrade Tier 2 projects and update packages
+### [✓] TASK-003: Upgrade Tier 2 projects and update packages *(Completed: 2025-11-16 17:26)*
 **References**: Plan §3.2, Plan §2.2.1, Plan §2.2.2
 
-- [▶] (1) Update TargetFramework to net10.0 in WebSpark.ArtSpark.Console and WebSpark.ArtSpark.Demo per Plan §3.2
-- [▶] (2) Update NuGet packages in WebSpark.ArtSpark.Console per Plan §2.2.1
-- [▶] (3) Update NuGet packages in WebSpark.ArtSpark.Demo per Plan §2.2.2
-- [▶] (4) Restore dependencies
-- [▶] (5) Build both projects and verify no errors (**Verify**)
-- [▶] (6) Commit changes with message: "TASK-003: Upgrade Tier 2 projects and update packages"
-- [▶] (7) Changes committed successfully (**Verify**)
+- [✓] (1) Update TargetFramework to net10.0 in WebSpark.ArtSpark.Console and WebSpark.ArtSpark.Demo per Plan §3.2
+- [✓] (2) Update NuGet packages in WebSpark.ArtSpark.Console per Plan §2.2.1
+- [✓] (3) Update NuGet packages in WebSpark.ArtSpark.Demo per Plan §2.2.2
+- [✓] (4) Restore dependencies
+- [✓] (5) Build both projects and verify no errors (**Verify**)
+- [✓] (6) Commit changes with message: "TASK-003: Upgrade Tier 2 projects and update packages"
+- [✓] (7) Changes committed successfully (**Verify**)
 
-### [ ] TASK-004: Upgrade Tier 3 test project and update packages
+### [▶] TASK-004: Upgrade Tier 3 test project and update packages
 **References**: Plan §3.3, Plan §2.2.3
 
-- [ ] (1) Update TargetFramework to net10.0 in WebSpark.ArtSpark.Tests per Plan §3.3
-- [ ] (2) Update NuGet packages in WebSpark.ArtSpark.Tests per Plan §2.2.3
-- [ ] (3) Restore dependencies
-- [ ] (4) Build test project and verify no errors (**Verify**)
-- [ ] (5) Commit changes with message: "TASK-004: Upgrade Tier 3 test project and update packages"
-- [ ] (6) Changes committed successfully (**Verify**)
+- [▶] (1) Update TargetFramework to net10.0 in WebSpark.ArtSpark.Tests per Plan §3.3
+- [▶] (2) Update NuGet packages in WebSpark.ArtSpark.Tests per Plan §2.2.3
+- [▶] (3) Restore dependencies
+- [▶] (4) Build test project and verify no errors (**Verify**)
+- [▶] (5) Commit changes with message: "TASK-004: Upgrade Tier 3 test project and update packages"
+- [▶] (6) Changes committed successfully (**Verify**)
 
 ### [ ] TASK-005: Full solution build and verification
 **References**: Plan §4.1
