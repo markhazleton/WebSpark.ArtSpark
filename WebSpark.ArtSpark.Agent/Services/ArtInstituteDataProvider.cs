@@ -217,8 +217,7 @@ public class ArtInstituteDataProvider : IArtworkDataProvider
     private string GetJsonStringProperty(JsonElement element, string propertyName)
     {
         return element.TryGetProperty(propertyName, out var prop) && prop.ValueKind != JsonValueKind.Null
-            ? prop.GetString() ?? ""
-            : "";
+            ? prop.GetString() ?? string.Empty : string.Empty;
     }
 
     private List<string> GenerateArtworkTags(ArtworkData artwork)

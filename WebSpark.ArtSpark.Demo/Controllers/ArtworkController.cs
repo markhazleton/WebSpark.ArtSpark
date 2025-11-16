@@ -13,6 +13,7 @@ namespace WebSpark.ArtSpark.Demo.Controllers;
 /// <summary>
 /// Controller for displaying artwork from the Art Institute of Chicago
 /// </summary>
+[Authorize]
 public class ArtworkController : Controller
 {
     private readonly IArtInstituteClient _artInstituteClient;

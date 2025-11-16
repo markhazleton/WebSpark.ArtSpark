@@ -38,7 +38,7 @@ namespace WebSpark.ArtSpark.Agent.Extensions
                 new TestCase("How does this fit into the museum's collection?", ChatPersona.Curator, true, "Valid curatorial question"),
 
                 // 🚫 Invalid - Empty or too short messages
-                new TestCase("", ChatPersona.Artwork, false, "Empty message"),
+                new TestCase(string.Empty, ChatPersona.Artwork, false, "Empty message"),
                 new TestCase("hi", ChatPersona.Artwork, false, "Too short (but greeting might be allowed)"),
 
                 // 🚫 Invalid - Too long messages
@@ -128,7 +128,7 @@ namespace WebSpark.ArtSpark.Agent.Extensions
             // Format validation
             Console.WriteLine("\n📏 Format Validation:");
             TestFormatValidation(validator, "Valid message");
-            TestFormatValidation(validator, "");
+            TestFormatValidation(validator, string.Empty);
             TestFormatValidation(validator, new string('x', 600));
             TestFormatValidation(validator, "!!!!!!!!!");
 

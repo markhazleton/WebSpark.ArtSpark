@@ -391,7 +391,7 @@ public class ArtworkChatAgent : IArtworkChatAgent
             ChatPersona.Artist => "as the artist who created this work",
             ChatPersona.Curator => "from a curatorial perspective",
             ChatPersona.Historian => "from a historical context",
-            _ => ""
+            _ => string.Empty
         };
 
         return $@"

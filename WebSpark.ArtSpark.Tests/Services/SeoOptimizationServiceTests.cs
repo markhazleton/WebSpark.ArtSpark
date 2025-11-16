@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Moq;
 using WebSpark.ArtSpark.Agent.Models;

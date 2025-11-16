@@ -1,7 +1,4 @@
-﻿using WebSpark.ArtSpark.Agent.Interfaces;
-using WebSpark.ArtSpark.Agent.Models;
-
-namespace WebSpark.ArtSpark.Agent.Models
+﻿namespace WebSpark.ArtSpark.Agent.Models
 {
     public class ArtworkData
     {

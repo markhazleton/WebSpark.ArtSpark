@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using WebSpark.ArtSpark.Client.Interfaces;
 using WebSpark.ArtSpark.Client.Models.Collections;
 using WebSpark.ArtSpark.Client.Models.Common;
-using WebSpark.ArtSpark.Client.Models.Shop;
 
 namespace WebSpark.ArtSpark.Demo.Controllers.Api;
 

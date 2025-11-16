@@ -1,9 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using WebSpark.ArtSpark.Client.Interfaces;
-using WebSpark.ArtSpark.Client.Models.Common;
 using WebSpark.ArtSpark.Client.Models.Collections;
+using WebSpark.ArtSpark.Client.Models.Common;
 using WebSpark.ArtSpark.Client.Models.Mobile;
-using WebSpark.ArtSpark.Client.Models.StaticArchive;
 
 namespace WebSpark.ArtSpark.Demo.Controllers.Api;
 

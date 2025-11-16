@@ -23,16 +23,19 @@
             <div class="col-lg-10">
                 <h1 class="display-5 fw-bold text-primary mb-2 d-flex align-items-center justify-content-center gap-2">
                     <img src="~/img/WebSparkArtSpark.png" alt="WebSpark.ArtSpark Logo" style="height:2.5rem;width:auto;"
-                         class="me-2" />
+                        class="me-2" />
                     WebSpark.ArtSpark
                 </h1>
                 <p class="text-body-secondary mb-3">
                     Where Open Art Meets .NET Excellence
                 </p>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                    <a href="@Url.Action("Index", "Artwork")" class="btn btn-primary px-4 me-md-2">
-                        <i class="bi bi-collection me-2"></i>Browse Artworks
-                    </a>
+                    @if (User.Identity!.IsAuthenticated)
+                    {
+                        <a href="@Url.Action("Index", "Artwork")" class="btn btn-primary px-4 me-md-2">
+                            <i class="bi bi-collection me-2"></i>Browse Artworks
+                        </a>
+                    }
                     <a href="/explore/collections" class="btn btn-outline-primary px-4">
                         <i class="bi bi-grid-3x3-gap me-2"></i>Collections
                     </a>
@@ -75,18 +78,18 @@
                             {
                                 <div class="position-relative overflow-hidden">
                                     <a href="/collection/@Model.Collection.Slug/item/@artwork.Slug"
-                                       class="text-decoration-none text-dark"
-                                       title="@(artwork.CollectionCustomTitle ?? artwork.Title)">
+                                        class="text-decoration-none text-dark"
+                                        title="@(artwork.CollectionCustomTitle ?? artwork.Title)">
                                         <img src="https://www.artic.edu/iiif/2/@artwork.ImageId/full/400,/0/default.jpg"
-                                             class="card-img-top object-fit-cover" style="height: 250px;"
-                                             alt="@(artwork.CollectionCustomTitle ?? artwork.Title) - @(string.IsNullOrEmpty(artwork.Artist) ? "Artist unknown" : $"by {artwork.Artist}")">
+                                            class="card-img-top object-fit-cover" style="height: 250px;"
+                                            alt="@(artwork.CollectionCustomTitle ?? artwork.Title) - @(string.IsNullOrEmpty(artwork.Artist) ? "Artist unknown" : $"by {artwork.Artist}")">
                                     </a>
                                 </div>
                             }
                             else
                             {
                                 <div class="card-img-top bg-body-secondary d-flex align-items-center justify-content-center text-body-tertiary"
-                                     style="height: 250px;">
+                                    style="height: 250px;">
                                     <div class="text-center">
                                         <i class="bi bi-image display-4 mb-2"></i>
                                         <p class="mb-0 small">@(artwork.CollectionCustomTitle ?? artwork.Title)</p>
@@ -96,8 +99,8 @@
                             <div class="card-body p-3">
                                 <h6 class="card-title mb-0 text-truncate">
                                     <a href="/collection/@Model.Collection.Slug/item/@artwork.Slug"
-                                       class="text-decoration-none text-dark"
-                                       title="@(artwork.CollectionCustomTitle ?? artwork.Title)">
+                                        class="text-decoration-none text-dark"
+                                        title="@(artwork.CollectionCustomTitle ?? artwork.Title)">
                                         @(artwork.CollectionCustomTitle ?? artwork.Title)
                                     </a>
                                 </h6>
@@ -108,7 +111,6 @@
                             </div>
                         </div>
                     </div>
-                }
                 }
             </div>
             <div class="text-center mt-4">
@@ -212,7 +214,7 @@
                         <p class="text-body-secondary mb-4">
                             Created by <strong>
                                 <a href="https://markhazleton.com" target="_blank" rel="noopener"
-                                   class="text-decoration-none text-primary">Mark Hazleton</a>
+                                    class="text-decoration-none text-primary">Mark Hazleton</a>
                             </strong>,
                             a seasoned software architect and .NET expert, this application showcases best practices in
                             web development,
@@ -223,7 +225,7 @@
                                 <i class="bi bi-book me-1"></i>View Documentation
                             </a>
                             <a href="https://markhazleton.com" target="_blank" rel="noopener"
-                               class="btn btn-outline-secondary btn-sm">
+                                class="btn btn-outline-secondary btn-sm">
                                 <i class="bi bi-person me-1"></i>About the Creator
                             </a>
                         </div>

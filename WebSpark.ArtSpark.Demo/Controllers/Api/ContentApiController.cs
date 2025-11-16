@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using WebSpark.ArtSpark.Client.Interfaces;
 using WebSpark.ArtSpark.Client.Models.Common;
-using WebSpark.ArtSpark.Client.Models.DigitalScholarlyCalatogs;
 using WebSpark.ArtSpark.Client.Models.Website;
 
 namespace WebSpark.ArtSpark.Demo.Controllers.Api;
