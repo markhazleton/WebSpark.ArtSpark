@@ -7,7 +7,7 @@ WebSpark.ArtSpark is a modern, open-source ASP.NET Core application that beautif
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![NuGet](https://img.shields.io/nuget/v/WebSpark.Bootswatch.svg)](https://www.nuget.org/packages/WebSpark.Bootswatch/)
 [![NuGet](https://img.shields.io/nuget/v/WebSpark.HttpClientUtility.svg)](https://www.nuget.org/packages/WebSpark.HttpClientUtility/)
-[![.NET Version](https://img.shields.io/badge/.NET-9-blue)](https://dotnet.microsoft.com/)
+[![.NET Version](https://img.shields.io/badge/.NET-10%20(Preview)-purple)](https://dotnet.microsoft.com/)
 
 ---
 
@@ -52,11 +52,12 @@ Experience WebSpark.ArtSpark live at: **[https://artspark.markhazleton.com](http
 
 ## 🧰 Tech Stack
 
-* ASP.NET Core 9 (Razor Pages)
+* ASP.NET Core 10 Preview (Razor Pages)
 * Bootstrap 5 with Bootswatch
 * Polly for .NET resilience
 * Art Institute of Chicago API
 * Custom middleware and component system
+* Microsoft Semantic Kernel for AI capabilities
 
 ---
 
@@ -143,8 +144,10 @@ builder.Services.AddHttpClientWithPolicies("ArtApiClient", client =>
 
 ### Prerequisites
 
-* [.NET 9 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
+* [.NET 10 SDK (Preview)](https://dotnet.microsoft.com/en-us/download/dotnet/10.0)
 * A modern code editor (Visual Studio 2022+, VS Code)
+
+> **Note**: .NET 10 is currently in preview. For production deployments, consider using the latest LTS version.
 
 ### Clone and Run
 
