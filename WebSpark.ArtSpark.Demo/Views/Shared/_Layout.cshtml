@@ -31,8 +31,7 @@
     <!-- Pre-load default theme and preferences -->
     <script>
         // Set fixed theme and color mode - no user customization
-        (function ()
-        {
+        (function () {
             // Set fixed theme to yeti and color mode to light
             localStorage.setItem('bootswatch-theme', 'yeti');
 
@@ -176,6 +175,21 @@
                                     <li><a class="dropdown-item" asp-controller="Account" asp-action="Collections"><i
                                                 class="bi bi-collection me-2"></i>My
                                             Collections</a></li>
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li>
+                                            <h6 class="dropdown-header"><i class="bi bi-shield-lock me-2"></i>Administration
+                                            </h6>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="AdminUsers" asp-action="Index">
+                                                <i class="bi bi-people me-2"></i>Manage Users
+                                            </a>
+                                        </li>
+                                    }
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
@@ -223,27 +237,21 @@
     <script src="~/js/reviews.js" asp-append-version="true"></script>
     <!-- Simplified Navigation Scripts with Fixed Theme -->
     <script>
-        (function ()
-        {
+        (function () {
             'use strict';
 
             // Ensure theme and color mode are always fixed
             document.documentElement.setAttribute('data-bs-theme', 'light');
 
             // Close dropdown on outside click (mobile enhancement)
-            function closeDropdownOnOutsideClick()
-            {
-                document.addEventListener('click', function (event)
-                {
+            function closeDropdownOnOutsideClick() {
+                document.addEventListener('click', function (event) {
                     const dropdowns = document.querySelectorAll('.dropdown-menu.show');
-                    dropdowns.forEach(function (dropdown)
-                    {
+                    dropdowns.forEach(function (dropdown) {
                         const toggle = dropdown.previousElementSibling;
-                        if (toggle && !toggle.contains(event.target) && !dropdown.contains(event.target))
-                        {
+                        if (toggle && !toggle.contains(event.target) && !dropdown.contains(event.target)) {
                             const bsDropdown = bootstrap.Dropdown.getInstance(toggle);
-                            if (bsDropdown)
-                            {
+                            if (bsDropdown) {
                                 bsDropdown.hide();
                             }
                         }
@@ -252,20 +260,15 @@
             }
 
             // Keyboard navigation enhancement
-            function enhanceKeyboardNavigation()
-            {
-                document.addEventListener('keydown', function (event)
-                {
+            function enhanceKeyboardNavigation() {
+                document.addEventListener('keydown', function (event) {
                     // Close dropdown on Escape key
-                    if (event.key === 'Escape')
-                    {
+                    if (event.key === 'Escape') {
                         const openDropdowns = document.querySelectorAll('.dropdown-menu.show');
-                        openDropdowns.forEach(function (dropdown)
-                        {
+                        openDropdowns.forEach(function (dropdown) {
                             const toggle = dropdown.previousElementSibling;
                             const bsDropdown = bootstrap.Dropdown.getInstance(toggle);
-                            if (bsDropdown)
-                            {
+                            if (bsDropdown) {
                                 bsDropdown.hide();
                                 toggle.focus(); // Return focus to toggle
                             }
@@ -275,8 +278,7 @@
             }
 
             // Initialize on page load
-            document.addEventListener('DOMContentLoaded', function ()
-            {
+            document.addEventListener('DOMContentLoaded', function () {
                 // Ensure fixed theme settings
                 document.documentElement.setAttribute('data-bs-theme', 'light');
                 localStorage.setItem('bootswatch-theme', 'yeti');
@@ -286,8 +288,7 @@
                 enhanceKeyboardNavigation();
 
                 // Debug info in development
-                if (window.location.hostname === 'localhost')
-                {
+                if (window.location.hostname === 'localhost') {
                     console.log('WebSpark Theme System Initialized');
                     console.log('Fixed Theme: yeti');
                     console.log('Fixed Color Mode: light');
@@ -296,21 +297,16 @@
 
             // Handle window resize for responsive adjustments
             let resizeTimer;
-            window.addEventListener('resize', function ()
-            {
+            window.addEventListener('resize', function () {
                 clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(function ()
-                {
+                resizeTimer = setTimeout(function () {
                     // Close any open dropdowns on significant resize
-                    if (window.innerWidth >= 992)
-                    { // Large screens
+                    if (window.innerWidth >= 992) { // Large screens
                         const openDropdowns = document.querySelectorAll('.dropdown-menu.show');
-                        openDropdowns.forEach(function (dropdown)
-                        {
+                        openDropdowns.forEach(function (dropdown) {
                             const toggle = dropdown.previousElementSibling;
                             const bsDropdown = bootstrap.Dropdown.getInstance(toggle);
-                            if (bsDropdown)
-                            {
+                            if (bsDropdown) {
                                 bsDropdown.hide();
                             }
                         });

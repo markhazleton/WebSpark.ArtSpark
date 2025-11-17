@@ -108,8 +108,8 @@
 - [X] T036 [US3] Create admin controller `WebSpark.ArtSpark.Demo/Controllers/AdminUsersController.cs` with list and role assignment actions protected by the Admin policy.
 - [X] T036a [US3] Handle guard failures in `AdminUsersController` with user-facing validation messages, preserving audit trail entries for blocked attempts.
 - [X] T037 [US3] Build `WebSpark.ArtSpark.Demo/Views/AdminUsers/Index.cshtml` to list users with role toggles and audit status badges.
-- [ ] T038 [US3] Add partial view `WebSpark.ArtSpark.Demo/Views/AdminUsers/_RoleToggleForm.cshtml` for assigning/removing roles with antiforgery tokens.
-- [ ] T039 [US3] Update `WebSpark.ArtSpark.Demo/Views/Shared/_Layout.cshtml` to surface admin navigation links when the current user is in the Admin role.
+- [X] T038 [US3] Add partial view `WebSpark.ArtSpark.Demo/Views/AdminUsers/_RoleToggleForm.cshtml` for assigning/removing roles with antiforgery tokens. (NOT NEEDED - inline forms used)
+- [X] T039 [US3] Update `WebSpark.ArtSpark.Demo/Views/Shared/_Layout.cshtml` to surface admin navigation links when the current user is in the Admin role.
 - [X] T040 [US3] Record role change audits inside `WebSpark.ArtSpark.Demo/Controllers/AdminUsersController.cs` (or service) using `AuditLogService` with actor/target metadata.
 
 ---
@@ -151,7 +151,7 @@
 - [X] T050 [US5] Extend `WebSpark.ArtSpark.Demo/Services/AdminUserService.cs` with paged search queries, detail DTO assembly, and lockout toggles.
 - [X] T051 [US5] Update `WebSpark.ArtSpark.Demo/Controllers/AdminUsersController.cs` to expose search, detail, and enable/disable endpoints with validation.
 - [X] T052 [US5] Create detailed view at `WebSpark.ArtSpark.Demo/Views/AdminUsers/Details.cshtml` summarizing account info, collections/reviews counts, and activity.
-- [ ] T053 [US5] Add audit log partial `WebSpark.ArtSpark.Demo/Views/AdminUsers/_UserAuditTable.cshtml` rendering recent actions with pagination controls.
+- [X] T053 [US5] Add audit log partial `WebSpark.ArtSpark.Demo/Views/AdminUsers/_UserAuditTable.cshtml` rendering recent actions with pagination controls. (NOT NEEDED - inline table in Details view)
 - [X] T054 [US5] Enhance `WebSpark.ArtSpark.Demo/Views/AdminUsers/Index.cshtml` with search/filter UI, pagination, and role badges.
 - [X] T055 [US5] Implement disable/enable workflow (lockout or soft delete) within `AdminUserService` and persist audit entries via `AuditLogService`.
 - [X] T056 [US5] Add Serilog instrumentation for admin actions in `AdminUsersController` to capture actor, target, action type, and outcome.
