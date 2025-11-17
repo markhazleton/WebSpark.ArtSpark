@@ -122,8 +122,8 @@
 
 ### Tests for User Story 4
 
-- [ ] T041 [US4] Add profile editing integration tests in `WebSpark.ArtSpark.Tests/Controllers/ProfileEditingTests.cs` covering success paths and validation errors.
-- [ ] T042 [US4] Extend controller unit tests in `WebSpark.ArtSpark.Tests/Controllers/AccountControllerTests.cs` to assert duplicate-email handling and confirmation messaging.
+- [X] T041 [US4] Add profile editing integration tests in `WebSpark.ArtSpark.Tests/Controllers/ProfileEditingTests.cs` covering success paths and validation errors.
+- [X] T042 [US4] Extend controller unit tests in `WebSpark.ArtSpark.Tests/Controllers/AccountControllerTests.cs` to assert duplicate-email handling and confirmation messaging.
 
 ### Implementation for User Story 4
 
