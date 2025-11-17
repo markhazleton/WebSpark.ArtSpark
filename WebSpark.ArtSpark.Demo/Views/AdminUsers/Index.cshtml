@@ -1,0 +1,123 @@
+@model List<WebSpark.ArtSpark.Demo.Services.UserSummaryDto>
+@{
+    ViewData["Title"] = "User Management";
+    var currentSearch = ViewData["CurrentSearch"] as string;
+    var currentPage = (int)(ViewData["CurrentPage"] ?? 1);
+    var totalPages = (int)(ViewData["TotalPages"] ?? 1);
+    var totalUsers = (int)(ViewData["TotalUsers"] ?? 0);
+}
+
+<div class="container mt-4">
+    <div class="row mb-3">
+        <div class="col">
+            <h1>User Management</h1>
+            <p class="text-muted">Total Users: @totalUsers</p>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <form asp-action="Index" method="get" class="d-flex">
+                <input type="text" name="search" class="form-control me-2" placeholder="Search by email or name" value="@currentSearch" />
+                <button type="submit" class="btn btn-primary">Search</button>
+                @if (!string.IsNullOrEmpty(currentSearch))
+                {
+                    <a asp-action="Index" class="btn btn-secondary ms-2">Clear</a>
+                }
+            </form>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Photo</th>
+                    <th>Email</th>
+                    <th>Display Name</th>
+                    <th>Roles</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(user.ProfilePhotoUrl))
+                            {
+                                <img src="@user.ProfilePhotoUrl" alt="@user.DisplayName" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center" style="width: 40px; height: 40px; color: white;">
+                                    @user.DisplayName.FirstOrDefault()
+                                </div>
+                            }
+                        </td>
+                        <td>
+                            @user.Email
+                            @if (!user.EmailVerified)
+                            {
+                                <span class="badge bg-warning text-dark ms-1">Unverified</span>
+                            }
+                        </td>
+                        <td>@user.DisplayName</td>
+                        <td>
+                            @foreach (var role in user.Roles)
+                            {
+                                <span class="badge @(role == "Admin" ? "bg-danger" : "bg-primary") me-1">@role</span>
+                            }
+                        </td>
+                        <td>
+                            @if (user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTimeOffset.UtcNow)
+                            {
+                                <span class="badge bg-danger">Locked</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">Active</span>
+                            }
+                        </td>
+                        <td>@user.CreatedAt.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@user.UserId" class="btn btn-sm btn-outline-primary">Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (totalPages > 1)
+    {
+        <nav aria-label="User pagination">
+            <ul class="pagination justify-content-center">
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-search="@currentSearch" asp-route-page="@i">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+</div>

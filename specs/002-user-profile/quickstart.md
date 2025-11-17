@@ -22,6 +22,8 @@
    - `FileUpload:AllowedImageTypes = "image/jpeg,image/png,image/webp"`
    - `FileUpload:ProfilePhotoPath = "wwwroot/uploads/profiles"`
    - `FileUpload:ThumbnailSizes = [64,128,256]`
+   - `FileUpload:DiskUsageThresholdMB = 5120` (example alert threshold)
+   - `AuditLog:RetentionDays = 365`
    - `Identity:RequireEmailVerification = true` (optional toggle)
    - SMTP settings (`Email:SmtpHost`, `Email:SmtpPort`, `Email:SmtpUsername`, `Email:SmtpPassword`, `Email:FromAddress`, `Email:FromName`)
 4. **Seed Default Roles**

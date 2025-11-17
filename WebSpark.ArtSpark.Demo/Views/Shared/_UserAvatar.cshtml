@@ -1,0 +1,24 @@
+@model WebSpark.ArtSpark.Demo.Models.ApplicationUser
+
+@{
+    var size = ViewData["Size"] as string ?? "40";
+    var displayName = Model?.DisplayName ?? "?";
+    var photoUrl = Model?.ProfilePhotoThumbnail64;
+    var cssClass = ViewData["CssClass"] as string ?? "";
+}
+
+@if (!string.IsNullOrEmpty(photoUrl))
+{
+    <img src="@photoUrl" 
+         alt="@displayName" 
+         class="rounded-circle @cssClass" 
+         style="width: @(size)px; height: @(size)px; object-fit: cover;" 
+         loading="lazy" />
+}
+else
+{
+    <div class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center @cssClass" 
+         style="width: @(size)px; height: @(size)px; color: white; font-size: @(int.Parse(size) / 2)px;">
+        @displayName.FirstOrDefault()
+    </div>
+}

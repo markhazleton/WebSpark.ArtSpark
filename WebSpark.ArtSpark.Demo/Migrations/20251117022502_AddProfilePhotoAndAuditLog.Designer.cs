@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebSpark.ArtSpark.Demo.Data;
 
@@ -10,9 +11,11 @@ using WebSpark.ArtSpark.Demo.Data;
 namespace WebSpark.ArtSpark.Demo.Migrations
 {
     [DbContext(typeof(ArtSparkDbContext))]
-    partial class ArtSparkDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251117022502_AddProfilePhotoAndAuditLog")]
+    partial class AddProfilePhotoAndAuditLog
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.0");

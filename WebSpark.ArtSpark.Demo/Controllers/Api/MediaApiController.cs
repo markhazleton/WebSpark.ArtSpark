@@ -3,6 +3,7 @@ using WebSpark.ArtSpark.Client.Interfaces;
 using WebSpark.ArtSpark.Client.Models.Collections;
 using WebSpark.ArtSpark.Client.Models.Common;
 using WebSpark.ArtSpark.Client.Models.Mobile;
+using CollectionImage = WebSpark.ArtSpark.Client.Models.Collections.Image;
 
 namespace WebSpark.ArtSpark.Demo.Controllers.Api;
 
@@ -64,10 +65,10 @@ public class MediaApiController : ControllerBase
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Image details</returns>
     [HttpGet("images/{id}")]
-    [ProducesResponseType(typeof(Image), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(CollectionImage), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Image>> GetImage(
+    public async Task<ActionResult<CollectionImage>> GetImage(
         string id,
         [FromQuery] string[]? fields = null,
         CancellationToken cancellationToken = default)
@@ -100,9 +101,9 @@ public class MediaApiController : ControllerBase
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Paginated list of images</returns>
     [HttpGet("images")]
-    [ProducesResponseType(typeof(ApiResponse<Image>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<CollectionImage>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<ApiResponse<Image>>> GetImages(
+    public async Task<ActionResult<ApiResponse<CollectionImage>>> GetImages(
         [FromQuery] int? limit = null,
         [FromQuery] int? page = null,
         [FromQuery] string[]? fields = null,
@@ -134,10 +135,10 @@ public class MediaApiController : ControllerBase
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Search results for images</returns>
     [HttpPost("images/search")]
-    [ProducesResponseType(typeof(SearchResponse<Image>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(SearchResponse<CollectionImage>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<SearchResponse<Image>>> SearchImages(
+    public async Task<ActionResult<SearchResponse<CollectionImage>>> SearchImages(
         [FromBody] SearchQuery query,
         CancellationToken cancellationToken = default)
     {

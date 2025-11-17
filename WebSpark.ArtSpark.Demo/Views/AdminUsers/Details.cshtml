@@ -1,0 +1,194 @@
+@model WebSpark.ArtSpark.Demo.Services.UserDetailDto
+@{
+    ViewData["Title"] = $"User Details - {Model.DisplayName}";
+    var isLocked = Model.LockoutEnd.HasValue && Model.LockoutEnd.Value > DateTimeOffset.UtcNow;
+}
+
+<div class="container mt-4">
+    <div class="row mb-3">
+        <div class="col">
+            <a asp-action="Index" class="btn btn-secondary mb-2">&larr; Back to User List</a>
+            <h1>User Details</h1>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    @if (!string.IsNullOrEmpty(Model.ProfilePhotoUrl))
+                    {
+                        <img src="@Model.ProfilePhotoUrl" alt="@Model.DisplayName" class="rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;" />
+                    }
+                    else
+                    {
+                        <div class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center mb-3" style="width: 150px; height: 150px; color: white; font-size: 3rem;">
+                            @Model.DisplayName.FirstOrDefault()
+                        </div>
+                    }
+                    <h4>@Model.DisplayName</h4>
+                    <p class="text-muted">@Model.Email</p>
+                    @if (!Model.EmailVerified)
+                    {
+                        <span class="badge bg-warning text-dark">Email Unverified</span>
+                    }
+                    @if (isLocked)
+                    {
+                        <span class="badge bg-danger d-block mt-2">Account Locked</span>
+                    }
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5>Account Actions</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="ToggleLockout" method="post" class="mb-2">
+                        <input type="hidden" name="userId" value="@Model.UserId" />
+                        <input type="hidden" name="lockout" value="@(!isLocked)" />
+                        <button type="submit" class="btn @(isLocked ? "btn-success" : "btn-danger") w-100">
+                            @(isLocked ? "Unlock Account" : "Lock Account")
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5>User Information</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">User ID:</dt>
+                        <dd class="col-sm-9"><code>@Model.UserId</code></dd>
+
+                        <dt class="col-sm-3">Email:</dt>
+                        <dd class="col-sm-9">@Model.Email</dd>
+
+                        <dt class="col-sm-3">Display Name:</dt>
+                        <dd class="col-sm-9">@Model.DisplayName</dd>
+
+                        <dt class="col-sm-3">Bio:</dt>
+                        <dd class="col-sm-9">@(Model.Bio ?? "No bio provided")</dd>
+
+                        <dt class="col-sm-3">Created:</dt>
+                        <dd class="col-sm-9">@Model.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss")</dd>
+
+                        <dt class="col-sm-3">Collections:</dt>
+                        <dd class="col-sm-9">@Model.CollectionsCount</dd>
+
+                        <dt class="col-sm-3">Reviews:</dt>
+                        <dd class="col-sm-9">@Model.ReviewsCount</dd>
+
+                        <dt class="col-sm-3">Favorites:</dt>
+                        <dd class="col-sm-9">@Model.FavoritesCount</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5>Role Management</h5>
+                </div>
+                <div class="card-body">
+                    <h6>Current Roles:</h6>
+                    <div class="mb-3">
+                        @if (Model.Roles.Any())
+                        {
+                            @foreach (var role in Model.Roles)
+                            {
+                                <span class="badge @(role == "Admin" ? "bg-danger" : "bg-primary") me-2">@role</span>
+                                <form asp-action="RemoveRole" method="post" class="d-inline">
+                                    <input type="hidden" name="userId" value="@Model.UserId" />
+                                    <input type="hidden" name="roleName" value="@role" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                                </form>
+                            }
+                        }
+                        else
+                        {
+                            <p class="text-muted">No roles assigned</p>
+                        }
+                    </div>
+
+                    <h6>Assign Role:</h6>
+                    <div class="btn-group" role="group">
+                        @if (!Model.Roles.Contains("User"))
+                        {
+                            <form asp-action="AssignRole" method="post" class="d-inline">
+                                <input type="hidden" name="userId" value="@Model.UserId" />
+                                <input type="hidden" name="roleName" value="User" />
+                                <button type="submit" class="btn btn-outline-primary">Assign User Role</button>
+                            </form>
+                        }
+                        @if (!Model.Roles.Contains("Admin"))
+                        {
+                            <form asp-action="AssignRole" method="post" class="d-inline">
+                                <input type="hidden" name="userId" value="@Model.UserId" />
+                                <input type="hidden" name="roleName" value="Admin" />
+                                <button type="submit" class="btn btn-outline-danger">Assign Admin Role</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5>Recent Audit Logs</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentAuditLogs.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Timestamp</th>
+                                        <th>Action</th>
+                                        <th>Admin</th>
+                                        <th>Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var log in Model.RecentAuditLogs)
+                                    {
+                                        <tr>
+                                            <td>@log.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                            <td><span class="badge bg-info">@log.ActionType</span></td>
+                                            <td>@(log.AdminUserId != null ? log.AdminUser?.Email : "System")</td>
+                                            <td><small>@log.Details</small></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No audit logs available</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

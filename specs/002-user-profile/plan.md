@@ -6,7 +6,7 @@
 
 ## Summary
 
-Implement profile photo uploads (with resizing and local storage), enhanced registration and profile editing UX, role-based access control with an Admin dashboard, password strength validation, and email verification support, all centered on `WebSpark.ArtSpark.Demo` using ASP.NET Core Identity and EF Core migrations.
+Implement profile photo uploads (with resizing and local storage), enhanced registration and profile editing UX, role-based access control with an Admin dashboard, password strength validation, email verification support, operational background jobs for audit-log retention/storage monitoring, and performance instrumentation to satisfy success criteria—all centered on `WebSpark.ArtSpark.Demo` using ASP.NET Core Identity and EF Core migrations.
 
 ## Technical Context
 
@@ -21,8 +21,8 @@ Implement profile photo uploads (with resizing and local storage), enhanced regi
 **Testing**: `dotnet test` across `WebSpark.ArtSpark.Tests` focusing on new ProfilePhotoService, RoleManagement, and integration tests for registration/admin flows  
 **Target Platform**: ASP.NET Core web app deployed to artspark.markhazleton.com  
 **Project Type**: Multi-project .NET solution centered on `WebSpark.ArtSpark.Demo`  
-**Performance Goals**: Registration completion < 2 minutes; photo processing < 5 seconds/file up to 5MB; Admin user list p95 load time < 1 second; password feedback < 200ms  
-**Constraints**: Profile photos ≤ 5MB, JPEG/PNG/WebP only; bios ≤ 500 characters; thumbnails stored as disk files referenced via relative paths; audit logs retained 1 year; email verification tokens expire in 24 hours  
+**Performance Goals**: Registration completion < 2 minutes; photo processing < 5 seconds/file up to 5MB; Admin user list p95 load time < 1 second (achieved via AsNoTracking projection-based queries per research.md EF optimization strategy); password feedback < 200ms  
+**Constraints**: Profile photos ≤ 5MB, JPEG/PNG/WebP only; bios ≤ 500 characters; thumbnails stored as disk files referenced via relative paths; audit logs retained 1 year via hosted cleanup job; email verification tokens expire in 24 hours; disk usage monitoring alerts when profile storage exceeds configured thresholds  
 **Scale/Scope**: Applies to all Demo users (existing + new); Admin tooling targets thousands of user records with pagination
 
 ## Constitution Check

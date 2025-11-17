@@ -7,13 +7,68 @@ public class ApplicationUser : IdentityUser
 {
     public string DisplayName { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    
+    [PersonalData]
+    [MaxLength(500)]
     public string? Bio { get; set; }
+    
+    [PersonalData]
+    [MaxLength(260)]
+    public string? ProfilePhotoFileName { get; set; }
+    
+    [PersonalData]
+    [MaxLength(260)]
+    public string? ProfilePhotoThumbnail64 { get; set; }
+    
+    [PersonalData]
+    [MaxLength(260)]
+    public string? ProfilePhotoThumbnail128 { get; set; }
+    
+    [PersonalData]
+    [MaxLength(260)]
+    public string? ProfilePhotoThumbnail256 { get; set; }
+    
+    [Obsolete("Use ProfilePhotoThumbnail* properties instead")]
     public string? ProfileImageUrl { get; set; }
+    
+    public bool EmailVerified { get; set; } = false;
 
     // Navigation properties
     public virtual ICollection<ArtworkReview> Reviews { get; set; } = new List<ArtworkReview>();
     public virtual ICollection<UserFavorite> Favorites { get; set; } = new List<UserFavorite>();
     public virtual ICollection<UserCollection> Collections { get; set; } = new List<UserCollection>();
+}
+
+public class AuditLog
+{
+    public long Id { get; set; }
+    
+    [Required]
+    public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
+    
+    [Required]
+    [MaxLength(100)]
+    public string ActionType { get; set; } = string.Empty;
+    
+    [MaxLength(4000)]
+    public string? Details { get; set; }
+    
+    [Required]
+    [MaxLength(450)]
+    public string AdminUserId { get; set; } = string.Empty;
+    
+    [MaxLength(450)]
+    public string? TargetUserId { get; set; }
+    
+    [MaxLength(64)]
+    public string? CorrelationId { get; set; }
+    
+    [Timestamp]
+    public byte[]? RowVersion { get; set; }
+    
+    // Navigation properties
+    public virtual ApplicationUser AdminUser { get; set; } = null!;
+    public virtual ApplicationUser? TargetUser { get; set; }
 }
 
 public class ArtworkReview
@@ -177,7 +232,7 @@ public class RegisterViewModel
     public string Email { get; set; } = string.Empty;
 
     [Required]
-    [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+    [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 8)]
     [DataType(DataType.Password)]
     [Display(Name = "Password")]
     public string Password { get; set; } = string.Empty;
@@ -185,9 +240,15 @@ public class RegisterViewModel
     [DataType(DataType.Password)]
     [Display(Name = "Confirm password")]
     [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-    public string ConfirmPassword { get; set; } = string.Empty; [Required]
+    public string ConfirmPassword { get; set; } = string.Empty;
+
+    [Required]
     [Display(Name = "Display Name")]
+    [StringLength(100, ErrorMessage = "Display name must be at most {1} characters long.")]
     public string DisplayName { get; set; } = string.Empty;
+    
+    [Display(Name = "Profile Photo (optional)")]
+    public IFormFile? ProfilePhoto { get; set; }
 }
 
 // View Models for User Profile and Collections
@@ -207,12 +268,16 @@ public class ProfileViewModel
     [StringLength(500, ErrorMessage = "Bio must be at most {1} characters long.")]
     public string? Bio { get; set; }
 
-    [Display(Name = "Profile Image URL")]
-    [Url(ErrorMessage = "Please enter a valid URL")]
-    public string? ProfileImageUrl { get; set; }
+    [Display(Name = "Profile Photo")]
+    public IFormFile? NewProfilePhoto { get; set; }
+    
+    public string? CurrentPhotoUrl { get; set; }
+    public bool RemovePhoto { get; set; }
 
     [Display(Name = "Member Since")]
     public DateTime CreatedAt { get; set; }
+    
+    public int BioCharactersRemaining => 500 - (Bio?.Length ?? 0);
 }
 
 public class CreateCollectionViewModel

@@ -7,6 +7,7 @@ using WebSpark.ArtSpark.Client.Interfaces;
 using WebSpark.ArtSpark.Demo.Data;
 using WebSpark.ArtSpark.Demo.HttpClientUtility.MemoryCache;
 using WebSpark.ArtSpark.Demo.Models;
+using WebSpark.ArtSpark.Demo.Options;
 using WebSpark.ArtSpark.Demo.Services;
 using WebSpark.ArtSpark.Demo.Utilities;
 using WebSpark.Bootswatch;
@@ -48,15 +49,42 @@ builder.Services.AddDbContext<ArtSparkDbContext>(options =>
 // Add Identity Services
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-    options.SignIn.RequireConfirmedAccount = false;
+    options.SignIn.RequireConfirmedAccount = builder.Configuration.GetValue<bool>("Identity:RequireEmailVerification");
     options.Password.RequireDigit = true;
-    options.Password.RequiredLength = 6;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireLowercase = false;
+    options.Password.RequiredLength = 8;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
 })
 .AddEntityFrameworkStores<ArtSparkDbContext>()
 .AddDefaultTokenProviders();
+
+// Configure options from appsettings
+builder.Services.Configure<FileUploadOptions>(builder.Configuration.GetSection(FileUploadOptions.SectionName));
+builder.Services.Configure<AuditLogOptions>(builder.Configuration.GetSection(AuditLogOptions.SectionName));
+builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection(EmailOptions.SectionName));
+
+// Configure form file upload limits
+builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options =>
+{
+    var maxSize = builder.Configuration.GetValue<long>("FileUpload:MaxProfilePhotoSize");
+    options.MultipartBodyLengthLimit = maxSize > 0 ? maxSize : 5242880;
+});
+
+// Add Profile Management Services
+builder.Services.AddScoped<IProfilePhotoService, ProfilePhotoService>();
+builder.Services.AddScoped<IAuditLogService, AuditLogService>();
+builder.Services.AddScoped<IAdminUserService, AdminUserService>();
+builder.Services.AddScoped<IPasswordStrengthService, PasswordStrengthService>();
+builder.Services.AddScoped<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, SmtpEmailSender>();
+
+// Add Background Services
+builder.Services.AddHostedService<AuditLogCleanupService>();
+builder.Services.AddHostedService<ProfilePhotoStorageMonitor>();
+
+// Add Health Checks
+builder.Services.AddHealthChecks()
+    .AddCheck<ProfilePhotoStorageHealthCheck>("profile_storage");
 
 // Add Review Services
 builder.Services.AddScoped<IReviewService, ReviewService>();
@@ -106,6 +134,21 @@ builder.Services.AddBootswatchThemeSwitcher();
 
 var app = builder.Build();
 
+// Seed Identity roles and admin user
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    try
+    {
+        await IdentitySeeder.SeedRolesAndAdminAsync(services, builder.Configuration, logger);
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred while seeding the database");
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -124,6 +167,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
+app.MapHealthChecks("/health");
 
 // SEO-friendly collection routes
 app.MapControllerRoute(

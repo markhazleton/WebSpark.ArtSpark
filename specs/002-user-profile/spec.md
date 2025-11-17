@@ -151,14 +151,14 @@ New users receive email verification to confirm account ownership, improving sec
 - What safeguards prevent a user from uploading inappropriate profile photos? Admins manually review user profiles through user management dashboard and can remove inappropriate photos with moderation actions logged in audit trail.
 - What happens when a user changes their email to one that's already verified by another account? Clear error message displays indicating email is in use with suggestion to use account recovery if they own both accounts.
 - How does the system handle concurrent Admin role changes to the same user? Last write wins with optimistic concurrency, and conflict notification prompts Admin to refresh and retry.
-- What happens when profile photo storage grows large? System monitors disk usage without hard quotas initially, with ability to add cleanup policies based on actual usage patterns.
+- What happens when profile photo storage grows large? System monitors disk usage for observability and alerting (per FR-016) without enforcing hard quotas initially; administrators receive alerts to manually review and apply cleanup policies based on actual usage patterns.
 
 ## Demo Surface & Dependencies *(mandatory)*
 
 - **Affected Pages/Routes**: 
   - `/Account/Register` - Enhanced with profile photo upload field and improved validation
   - `/Account/Login` - Unchanged but profile photo displays after login
-  - `/Account/Manage` - Profile editing page with photo upload/change/remove capabilities
+  - `/Account/Profile` - Profile editing page with photo upload/change/remove capabilities
   - `/Admin/Users` - New admin-only user management dashboard
   - `/Admin/Users/{id}` - New admin-only user detail/edit page
   - Navigation partial views - Updated to display user profile photo
@@ -195,23 +195,22 @@ New users receive email verification to confirm account ownership, improving sec
 ### Functional Requirements
 
 - **FR-001**: Demo MUST allow users to upload profile photos during registration with file validation (format: JPEG/PNG/WebP, max size 5MB)
-- **FR-002**: Demo MUST automatically resize and optimize uploaded profile photos to standard sizes (64px, 128px, 256px thumbnails) to improve performance
+- **FR-002**: Demo MUST automatically resize and optimize uploaded profile photos to standard sizes (64px, 128px, 256px thumbnails) to improve performance using JPEG quality 85% for JPEG sources, lossless WebP encoding for WebP sources, and PNG-to-JPEG conversion for PNG uploads exceeding 1MB
 - **FR-003**: Demo MUST display user profile photos consistently across all user-identity contexts (navigation, profile page, collection author, review author)
 - **FR-004**: Demo MUST implement two roles (User, Admin) using ASP.NET Core Identity with proper authorization attributes on controllers/actions
 - **FR-005**: Demo MUST provide Admin-only user management interface with search, filter, role assignment, and account status controls
 - **FR-006**: Demo MUST implement real-time password strength indicator during registration and password change with visual feedback
 - **FR-007**: Demo MUST validate password complexity (minimum 8 characters, uppercase, lowercase, number, special character) and check against client-side common password list (top 10,000 weak passwords) following OWASP guidelines
 - **FR-008**: Demo MUST store uploaded profile photos in local file system with proper directory permissions preventing unauthorized file access and serve through authorized endpoints only
-- **FR-009**: Demo MUST provide profile editing page allowing users to update display name, bio, email, and profile photo
-- **FR-009a**: User bios MUST be limited to 500 characters with inline counter feedback during editing
+- **FR-009**: Demo MUST provide profile editing page allowing users to update display name, bio (limited to 500 characters with inline counter feedback), email, and profile photo
 - **FR-010**: Demo MUST implement email verification workflow using SMTP configuration with secure time-limited tokens (24-hour expiration) and resend capability
 - **FR-011**: System MUST persist role assignments in database with proper foreign key relationships to ApplicationUser
 - **FR-012**: System MUST log all administrative actions (role changes, account modifications) with timestamp and admin identity for audit trail
-- **FR-012a**: Audit log entries MUST be retained for 1 year before archival or purge according to storage policy
+- **FR-012a**: Audit log entries MUST be retained for 1 year then purged (hard delete from database) by automated background service; archival to external storage deferred to future enhancement
 - **FR-013**: System MUST prevent administrators from removing their own Admin role while ensuring at least one Admin exists
 - **FR-014**: System MUST handle file upload errors gracefully with clear user feedback (file too large, invalid format, storage failure)
 - **FR-015**: Observability MUST include structured logging for registration events, role changes, photo uploads, and authentication failures
-- **FR-016**: System MUST monitor disk storage usage for profile photos without enforcing hard quotas initially, with alerting when storage exceeds configurable thresholds
+- **FR-016**: System MUST monitor disk storage usage for profile photos without enforcing hard quotas initially, with alerting when storage exceeds configurable thresholds (specified as absolute MB limit in `FileUpload:DiskUsageThresholdMB`; alert triggers at 80% of threshold via Serilog Warning and health check degradation)
 
 ### Key Entities
 
@@ -290,6 +289,6 @@ This feature does not involve AI personas or content generation. Standard conten
 - **SC-005**: Password strength validation provides real-time feedback within 200ms of user input with accurate security scoring
 - **SC-006**: Profile photos display consistently across all user contexts (navigation, collections, reviews) with 95%+ cache hit rate
 - **SC-007**: Documentation covers all configuration options, admin workflows, and troubleshooting scenarios with code examples
-- **SC-008**: User registration completion rate increases by 15% after introducing profile photo capability (baseline measurement required)
+- **SC-008**: User registration completion rate increases by 15% after introducing profile photo capability (capture 30-day pre-deployment baseline via existing analytics; compare 30-day post-deployment completion rate defined as successful registrations / registration page visits)
 - **SC-009**: 90% of uploaded profile photos successfully process and store without errors or manual intervention
 - **SC-010**: All administrative actions (role changes, account modifications) are logged with complete audit trail for compliance reporting

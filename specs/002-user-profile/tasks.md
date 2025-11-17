@@ -15,9 +15,9 @@
 
 **Purpose**: Ensure tooling, packages, and configuration scaffolding exist for the Demo feature work.
 
-- [ ] T001 Add `SixLabors.ImageSharp` and `SixLabors.ImageSharp.Web` package references in `WebSpark.ArtSpark.Demo/WebSpark.ArtSpark.Demo.csproj`.
-- [ ] T002 Create upload storage placeholder at `WebSpark.ArtSpark.Demo/wwwroot/uploads/profiles/.gitkeep` to keep the directory under source control.
-- [ ] T003 Add `FileUpload` configuration defaults (size, types, path, thumbnails) to `WebSpark.ArtSpark.Demo/appsettings.json` and `WebSpark.ArtSpark.Demo/appsettings.Development.json`.
+- [X] T001 Add `SixLabors.ImageSharp` and `SixLabors.ImageSharp.Web` package references in `WebSpark.ArtSpark.Demo/WebSpark.ArtSpark.Demo.csproj`.
+- [X] T002 Create upload storage placeholder at `WebSpark.ArtSpark.Demo/wwwroot/uploads/profiles/.gitkeep` to keep the directory under source control.
+- [X] T003 Add `FileUpload` configuration defaults (size, types, path, thumbnails) to `WebSpark.ArtSpark.Demo/appsettings.json` and `WebSpark.ArtSpark.Demo/appsettings.Development.json`.
 
 ---
 
@@ -25,15 +25,19 @@
 
 **Purpose**: Establish shared infrastructure (data model, services, options) required before any story work can begin.
 
-- [ ] T004 Update `WebSpark.ArtSpark.Demo/Models/UserModels.cs` to add profile photo path fields, 500 character bio limit enforcement, and `EmailVerified` flag on `ApplicationUser` with `[PersonalData]` annotations.
-- [ ] T005 Add new audit entity in `WebSpark.ArtSpark.Demo/Models/AuditLog.cs` capturing admin actions with rowversion and FK links to `ApplicationUser`.
-- [ ] T006 Update `WebSpark.ArtSpark.Demo/Data/ArtSparkDbContext.cs` to register `DbSet<AuditLog>` and configure relationships with restricted deletes and indexed timestamps.
-- [ ] T007 Add strongly-typed upload options at `WebSpark.ArtSpark.Demo/Options/FileUploadOptions.cs` with max size, allowed MIME types, and thumbnail sizes bound to configuration.
-- [ ] T008 Create disk photo contract in `WebSpark.ArtSpark.Demo/Services/IProfilePhotoService.cs` defining upload, resize, and removal members.
-- [ ] T009 Implement ImageSharp-backed storage pipeline in `WebSpark.ArtSpark.Demo/Services/ProfilePhotoService.cs` (validation, orientation fix, thumbnail generation, sanitized filenames).
-- [ ] T010 Add audit logging abstraction in `WebSpark.ArtSpark.Demo/Services/AuditLogService.cs` to persist entries using `AuditLog` and Serilog correlation IDs.
-- [ ] T011 Update `WebSpark.ArtSpark.Demo/Program.cs` to register file upload options, profile photo/audit services, and configure `FormOptions.MultipartBodyLengthLimit` per plan.
-- [ ] T012 Add EF Core migration under `WebSpark.ArtSpark.Demo/Migrations/` introducing new `ApplicationUser` columns and the `AuditLog` table, then update `ArtSparkDbContextModelSnapshot.cs` accordingly.
+- [X] T004 Update `WebSpark.ArtSpark.Demo/Models/UserModels.cs` to add profile photo path fields, 500 character bio limit enforcement, and `EmailVerified` flag on `ApplicationUser` with `[PersonalData]` annotations.
+- [X] T005 Add new audit entity in `WebSpark.ArtSpark.Demo/Models/AuditLog.cs` capturing admin actions with rowversion and FK links to `ApplicationUser`.
+- [X] T006 Update `WebSpark.ArtSpark.Demo/Data/ArtSparkDbContext.cs` to register `DbSet<AuditLog>` and configure relationships with restricted deletes and indexed timestamps.
+- [X] T007 Add strongly-typed upload options at `WebSpark.ArtSpark.Demo/Options/FileUploadOptions.cs` with max size, allowed MIME types, and thumbnail sizes bound to configuration.
+- [X] T008 Create disk photo contract in `WebSpark.ArtSpark.Demo/Services/IProfilePhotoService.cs` defining upload, resize, and removal members.
+- [X] T009 Implement ImageSharp-backed storage pipeline in `WebSpark.ArtSpark.Demo/Services/ProfilePhotoService.cs` (validation, orientation fix, thumbnail generation, sanitized filenames).
+- [X] T010 Add audit logging abstraction in `WebSpark.ArtSpark.Demo/Services/AuditLogService.cs` to persist entries using `AuditLog` and Serilog correlation IDs.
+- [X] T011 Update `WebSpark.ArtSpark.Demo/Program.cs` to register file upload options, profile photo/audit services, and configure `FormOptions.MultipartBodyLengthLimit` per plan.
+- [X] T012 Add EF Core migration under `WebSpark.ArtSpark.Demo/Migrations/` introducing new `ApplicationUser` columns and the `AuditLog` table, then update `ArtSparkDbContextModelSnapshot.cs` accordingly.
+- [X] T012a Add `WebSpark.ArtSpark.Demo/Options/AuditLogOptions.cs` and `WebSpark.ArtSpark.Demo/Services/AuditLogCleanupService.cs` to enforce 1-year retention with configurable purge cadence.
+- [X] T012b Register `AuditLogCleanupService` as a hosted service in `WebSpark.ArtSpark.Demo/Program.cs`, add default `AuditLog:RetentionDays` settings to appsettings, and create retention unit tests in `WebSpark.ArtSpark.Tests/Services/AuditLogCleanupServiceTests.cs`.
+- [X] T012c Implement `WebSpark.ArtSpark.Demo/Services/ProfilePhotoStorageMonitor.cs` (and related health check) to measure disk usage for `FileUpload:ProfilePhotoPath` and emit structured alerts when exceeding thresholds (deliver via Serilog Warning level events with structured properties `CurrentUsageMB`, `ThresholdMB`, `PercentageUsed` and health check status degradation to `Degraded` for ASP.NET Core health endpoint monitoring).
+- [X] T012d Wire storage monitoring service and health check into `Program.cs`, add `FileUpload:DiskUsageThresholdMB` configuration defaults, and add coverage in `WebSpark.ArtSpark.Tests/Services/ProfilePhotoStorageMonitorTests.cs`.
 
 ---
 
@@ -72,13 +76,13 @@
 
 ### Implementation for User Story 2
 
-- [ ] T023 [US2] Update profile editing view models in `WebSpark.ArtSpark.Demo/Models/UserModels.cs` to include current photo metadata, `IFormFile NewProfilePhoto`, and remove flags.
-- [ ] T024 [US2] Revise `WebSpark.ArtSpark.Demo/Views/Account/Profile.cshtml` with photo preview, upload/remove controls, and inline validation feedback.
-- [ ] T025 [US2] Adjust profile POST logic in `WebSpark.ArtSpark.Demo/Controllers/AccountController.cs` to route photo operations through `IProfilePhotoService` and maintain invariants.
-- [ ] T026 [US2] Expand `WebSpark.ArtSpark.Demo/Services/ProfilePhotoService.cs` to handle replacements, deletion retries, and thumbnail cache busting.
-- [ ] T027 [US2] Create reusable avatar partial at `WebSpark.ArtSpark.Demo/Views/Shared/_UserAvatar.cshtml` displaying thumbnails with default fallback.
+- [X] T023 [US2] Update profile editing view models in `WebSpark.ArtSpark.Demo/Models/UserModels.cs` to include current photo metadata, `IFormFile NewProfilePhoto`, and remove flags.
+- [X] T024 [US2] Revise `WebSpark.ArtSpark.Demo/Views/Account/Profile.cshtml` with photo preview, upload/remove controls, and inline validation feedback.
+- [X] T025 [US2] Adjust profile POST logic in `WebSpark.ArtSpark.Demo/Controllers/AccountController.cs` to route photo operations through `IProfilePhotoService` and maintain invariants.
+- [X] T026 [US2] Expand `WebSpark.ArtSpark.Demo/Services/ProfilePhotoService.cs` to handle replacements, deletion retries, and thumbnail cache busting.
+- [X] T027 [US2] Create reusable avatar partial at `WebSpark.ArtSpark.Demo/Views/Shared/_UserAvatar.cshtml` displaying thumbnails with default fallback.
 - [ ] T028 [US2] Update identity surfaces (`WebSpark.ArtSpark.Demo/Views/PublicCollections/*.cshtml`, review components, navigation) to consume `_UserAvatar` partial instead of raw URLs.
-- [ ] T029 [US2] Capture structured audit entries for photo upload/remove actions within `WebSpark.ArtSpark.Demo/Services/AuditLogService.cs` and `AccountController`.
+- [X] T029 [US2] Capture structured audit entries for photo upload/remove actions within `WebSpark.ArtSpark.Demo/Services/AuditLogService.cs` and `AccountController`.
 
 ---
 
@@ -92,18 +96,21 @@
 
 - [ ] T030 [US3] Add authorization integration tests in `WebSpark.ArtSpark.Tests/Controllers/AdminUsersAuthorizationTests.cs` ensuring admin-only routes reject non-admins.
 - [ ] T031 [US3] Create role management unit tests in `WebSpark.ArtSpark.Tests/Services/AdminUserServiceTests.cs` verifying role assignment safeguards.
+- [ ] T031a [US3] Extend admin role tests in `WebSpark.ArtSpark.Tests/Services/AdminUserServiceTests.cs` to cover self-demotion blocking and "last admin" protection scenarios.
 
 ### Implementation for User Story 3
 
-- [ ] T032 [US3] Define admin service contract in `WebSpark.ArtSpark.Demo/Services/IAdminUserService.cs` for role queries and updates.
-- [ ] T033 [US3] Implement `AdminUserService` in `WebSpark.ArtSpark.Demo/Services/AdminUserService.cs` using `UserManager`/`RoleManager` with audit hooks.
-- [ ] T034 [US3] Add identity seeding utility at `WebSpark.ArtSpark.Demo/Data/IdentitySeeder.cs` to ensure `User` and `Admin` roles plus bootstrap admin user exist.
-- [ ] T035 [US3] Update `WebSpark.ArtSpark.Demo/Program.cs` to register `IAdminUserService`, execute `IdentitySeeder`, and configure `[Authorize(Roles = "Admin")]` policy.
-- [ ] T036 [US3] Create admin controller `WebSpark.ArtSpark.Demo/Controllers/AdminUsersController.cs` with list and role assignment actions protected by the Admin policy.
-- [ ] T037 [US3] Build `WebSpark.ArtSpark.Demo/Views/AdminUsers/Index.cshtml` to list users with role toggles and audit status badges.
+- [X] T032 [US3] Define admin service contract in `WebSpark.ArtSpark.Demo/Services/IAdminUserService.cs` for role queries and updates.
+- [X] T033 [US3] Implement `AdminUserService` in `WebSpark.ArtSpark.Demo/Services/AdminUserService.cs` using `UserManager`/`RoleManager` with audit hooks.
+- [X] T033a [US3] Add guard logic in `AdminUserService` preventing administrators from removing their own Admin role and ensuring at least one Admin remains, returning domain errors when violated.
+- [X] T034 [US3] Add identity seeding utility at `WebSpark.ArtSpark.Demo/Data/IdentitySeeder.cs` to ensure `User` and `Admin` roles plus bootstrap admin user exist.
+- [X] T035 [US3] Update `WebSpark.ArtSpark.Demo/Program.cs` to register `IAdminUserService`, execute `IdentitySeeder`, and configure `[Authorize(Roles = "Admin")]` policy.
+- [X] T036 [US3] Create admin controller `WebSpark.ArtSpark.Demo/Controllers/AdminUsersController.cs` with list and role assignment actions protected by the Admin policy.
+- [X] T036a [US3] Handle guard failures in `AdminUsersController` with user-facing validation messages, preserving audit trail entries for blocked attempts.
+- [X] T037 [US3] Build `WebSpark.ArtSpark.Demo/Views/AdminUsers/Index.cshtml` to list users with role toggles and audit status badges.
 - [ ] T038 [US3] Add partial view `WebSpark.ArtSpark.Demo/Views/AdminUsers/_RoleToggleForm.cshtml` for assigning/removing roles with antiforgery tokens.
 - [ ] T039 [US3] Update `WebSpark.ArtSpark.Demo/Views/Shared/_Layout.cshtml` to surface admin navigation links when the current user is in the Admin role.
-- [ ] T040 [US3] Record role change audits inside `WebSpark.ArtSpark.Demo/Controllers/AdminUsersController.cs` (or service) using `AuditLogService` with actor/target metadata.
+- [X] T040 [US3] Record role change audits inside `WebSpark.ArtSpark.Demo/Controllers/AdminUsersController.cs` (or service) using `AuditLogService` with actor/target metadata.
 
 ---
 
@@ -120,11 +127,11 @@
 
 ### Implementation for User Story 4
 
-- [ ] T043 [US4] Enhance `ProfileViewModel` in `WebSpark.ArtSpark.Demo/Models/UserModels.cs` with editable email, character counter metadata, and validation messages.
-- [ ] T044 [US4] Update profile POST logic in `WebSpark.ArtSpark.Demo/Controllers/AccountController.cs` to handle email changes, uniqueness checks, and `EmailVerified` reset.
-- [ ] T045 [US4] Refresh `WebSpark.ArtSpark.Demo/Views/Account/Profile.cshtml` with inline guidance, live bio counter placeholders, and confirmation banners.
-- [ ] T046 [US4] Add front-end script at `WebSpark.ArtSpark.Demo/wwwroot/js/profile-edit.js` for real-time bio character counting and email validation hints.
-- [ ] T047 [US4] Emit Serilog events for profile updates (field diff, outcome) inside `AccountController` leveraging correlation IDs.
+- [X] T043 [US4] Enhance `ProfileViewModel` in `WebSpark.ArtSpark.Demo/Models/UserModels.cs` with editable email, character counter metadata, and validation messages.
+- [X] T044 [US4] Update profile POST logic in `WebSpark.ArtSpark.Demo/Controllers/AccountController.cs` to handle email changes, uniqueness checks, and `EmailVerified` reset.
+- [X] T045 [US4] Refresh `WebSpark.ArtSpark.Demo/Views/Account/Profile.cshtml` with inline guidance, live bio counter placeholders, and confirmation banners.
+- [X] T046 [US4] Add front-end script at `WebSpark.ArtSpark.Demo/wwwroot/js/profile-edit.js` for real-time bio character counting and email validation hints.
+- [X] T047 [US4] Emit Serilog events for profile updates (field diff, outcome) inside `AccountController` leveraging correlation IDs.
 
 ---
 
@@ -141,13 +148,13 @@
 
 ### Implementation for User Story 5
 
-- [ ] T050 [US5] Extend `WebSpark.ArtSpark.Demo/Services/AdminUserService.cs` with paged search queries, detail DTO assembly, and lockout toggles.
-- [ ] T051 [US5] Update `WebSpark.ArtSpark.Demo/Controllers/AdminUsersController.cs` to expose search, detail, and enable/disable endpoints with validation.
-- [ ] T052 [US5] Create detailed view at `WebSpark.ArtSpark.Demo/Views/AdminUsers/Details.cshtml` summarizing account info, collections/reviews counts, and activity.
+- [X] T050 [US5] Extend `WebSpark.ArtSpark.Demo/Services/AdminUserService.cs` with paged search queries, detail DTO assembly, and lockout toggles.
+- [X] T051 [US5] Update `WebSpark.ArtSpark.Demo/Controllers/AdminUsersController.cs` to expose search, detail, and enable/disable endpoints with validation.
+- [X] T052 [US5] Create detailed view at `WebSpark.ArtSpark.Demo/Views/AdminUsers/Details.cshtml` summarizing account info, collections/reviews counts, and activity.
 - [ ] T053 [US5] Add audit log partial `WebSpark.ArtSpark.Demo/Views/AdminUsers/_UserAuditTable.cshtml` rendering recent actions with pagination controls.
-- [ ] T054 [US5] Enhance `WebSpark.ArtSpark.Demo/Views/AdminUsers/Index.cshtml` with search/filter UI, pagination, and role badges.
-- [ ] T055 [US5] Implement disable/enable workflow (lockout or soft delete) within `AdminUserService` and persist audit entries via `AuditLogService`.
-- [ ] T056 [US5] Add Serilog instrumentation for admin actions in `AdminUsersController` to capture actor, target, action type, and outcome.
+- [X] T054 [US5] Enhance `WebSpark.ArtSpark.Demo/Views/AdminUsers/Index.cshtml` with search/filter UI, pagination, and role badges.
+- [X] T055 [US5] Implement disable/enable workflow (lockout or soft delete) within `AdminUserService` and persist audit entries via `AuditLogService`.
+- [X] T056 [US5] Add Serilog instrumentation for admin actions in `AdminUsersController` to capture actor, target, action type, and outcome.
 
 ---
 
@@ -164,12 +171,12 @@
 
 ### Implementation for User Story 6
 
-- [ ] T059 [US6] Add curated weak password list file at `WebSpark.ArtSpark.Demo/Data/common-passwords.txt` for client/server checks.
-- [ ] T060 [US6] Implement strength service in `WebSpark.ArtSpark.Demo/Services/PasswordStrengthService.cs` providing scoring and common-password lookup.
-- [ ] T061 [US6] Update `WebSpark.ArtSpark.Demo/Program.cs` to enforce new `IdentityOptions.Password` requirements and register `PasswordStrengthService`.
-- [ ] T062 [US6] Enhance `WebSpark.ArtSpark.Demo/Views/Account/Register.cshtml` with strength meter UI bound to real-time feedback placeholders.
+- [X] T059 [US6] Add curated weak password list file at `WebSpark.ArtSpark.Demo/Data/common-passwords.txt` for client/server checks.
+- [X] T060 [US6] Implement strength service in `WebSpark.ArtSpark.Demo/Services/PasswordStrengthService.cs` providing scoring and common-password lookup.
+- [X] T061 [US6] Update `WebSpark.ArtSpark.Demo/Program.cs` to enforce new `IdentityOptions.Password` requirements and register `PasswordStrengthService`.
+- [X] T062 [US6] Enhance `WebSpark.ArtSpark.Demo/Views/Account/Register.cshtml` with strength meter UI bound to real-time feedback placeholders.
 - [ ] T063 [US6] Add change password actions/views (`WebSpark.ArtSpark.Demo/Controllers/AccountController.cs`, `WebSpark.ArtSpark.Demo/Views/Account/ChangePassword.cshtml`) incorporating strength checks.
-- [ ] T064 [US6] Create client script at `WebSpark.ArtSpark.Demo/wwwroot/js/password-strength.js` reading the common-password list slice and updating the meter.
+- [X] T064 [US6] Create client script at `WebSpark.ArtSpark.Demo/wwwroot/js/password-strength.js` reading the common-password list slice and updating the meter.
 - [ ] T065 [US6] Integrate server-side common-password validation in registration and change-password handlers within `AccountController`.
 - [ ] T066 [US6] Add security-focused logging for password update attempts (without sensitive data) using Serilog in `AccountController`.
 
@@ -188,12 +195,12 @@
 
 ### Implementation for User Story 7
 
-- [ ] T069 [US7] Add email options contract at `WebSpark.ArtSpark.Demo/Options/EmailOptions.cs` mapping SMTP settings from configuration.
-- [ ] T070 [US7] Implement SMTP email sender in `WebSpark.ArtSpark.Demo/Services/SmtpEmailSender.cs` (with `IEmailSender` adapter) supporting templated messages.
-- [ ] T071 [US7] Update `WebSpark.ArtSpark.Demo/Program.cs` to require confirmed accounts, register the email sender, and bind `EmailOptions` from configuration.
+- [X] T069 [US7] Add email options contract at `WebSpark.ArtSpark.Demo/Options/EmailOptions.cs` mapping SMTP settings from configuration.
+- [X] T070 [US7] Implement SMTP email sender in `WebSpark.ArtSpark.Demo/Services/SmtpEmailSender.cs` (with `IEmailSender` adapter) supporting templated messages.
+- [X] T071 [US7] Update `WebSpark.ArtSpark.Demo/Program.cs` to require confirmed accounts, register the email sender, and bind `EmailOptions` from configuration.
 - [ ] T072 [US7] Modify `AccountController` register/login flows to send verification emails, block unverified actions, and expose confirm/resend endpoints.
 - [ ] T073 [US7] Add views `WebSpark.ArtSpark.Demo/Views/Account/EmailVerificationRequired.cshtml` and `WebSpark.ArtSpark.Demo/Views/Account/ConfirmEmail.cshtml` with guidance messaging.
-- [ ] T074 [US7] Extend configuration (`appsettings.json`, `appsettings.Development.json`) with SMTP settings referenced by `EmailOptions`.
+- [X] T074 [US7] Extend configuration (`appsettings.json`, `appsettings.Development.json`) with SMTP settings referenced by `EmailOptions`.
 - [ ] T075 [US7] Record verification and resend events via `AuditLogService` and Serilog for traceability inside `AccountController`.
 
 ---
@@ -207,6 +214,8 @@
 - [ ] T078 Add release notes and audit references to `docs/Documentation-Update-Summary.md` (or successor) highlighting database migration and configuration changes.
 - [ ] T079 Run full automated suite (`dotnet test WebSpark.ArtSpark.Tests`) and capture results in `docs/copilot/2025-11-16/test-report.md`.
 - [ ] T080 Perform manual verification per quickstart checklist and log outcomes in `docs/copilot/2025-11-16/manual-validation.md`.
+- [ ] T081 Instrument photo upload pipeline timings (Serilog metrics and health checks) to validate SC-002 thresholds and document collection endpoints in `docs/copilot/2025-11-16/metrics-notes.md`.
+- [ ] T082 Capture admin dashboard query performance metrics and registration completion analytics (SC-003, SC-008) via logging/dashboard configuration, documenting access in updated README sections.
 
 ---
 

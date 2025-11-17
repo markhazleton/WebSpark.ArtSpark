@@ -14,7 +14,7 @@
                     </div>
                 </div>
                 <div class="card-body p-4">
-                    <form asp-action="Register" method="post">
+                    <form asp-action="Register" method="post" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
                         
                         <div class="mb-3">
@@ -40,8 +40,15 @@
                                 <i class="bi bi-lock me-1"></i>Password
                             </label>
                             <input asp-for="Password" class="form-control" autocomplete="new-password" 
-                                   placeholder="Create a password" />
+                                   placeholder="Create a password (minimum 8 characters)" 
+                                   id="password-input" />
                             <span asp-validation-for="Password" class="text-danger"></span>
+                            <div id="password-strength" class="mt-2" style="display: none;">
+                                <small class="text-muted">Password strength: <span id="strength-label">-</span></small>
+                                <div class="progress mt-1" style="height: 5px;">
+                                    <div id="strength-bar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                </div>
+                            </div>
                         </div>
                         
                         <div class="mb-3">
@@ -51,6 +58,20 @@
                             <input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password" 
                                    placeholder="Confirm your password" />
                             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="ProfilePhoto" class="form-label">
+                                <i class="bi bi-image me-1"></i>Profile Photo (Optional)
+                            </label>
+                            <input asp-for="ProfilePhoto" class="form-control" type="file" 
+                                   accept="image/jpeg,image/png,image/webp" 
+                                   id="profile-photo-input" />
+                            <span asp-validation-for="ProfilePhoto" class="text-danger"></span>
+                            <small class="form-text text-muted">Maximum 5MB. Accepted formats: JPEG, PNG, WebP</small>
+                            <div id="photo-preview" class="mt-2" style="display: none;">
+                                <img id="preview-image" src="#" alt="Preview" class="img-thumbnail" style="max-width: 150px; max-height: 150px;" />
+                            </div>
                         </div>
                         
                         <div class="d-grid">
@@ -73,4 +94,38 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/password-strength.js"></script>
+    <script>
+        // Photo preview
+        document.getElementById('profile-photo-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Validate file size (5MB max)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size must be less than 5MB');
+                    e.target.value = '';
+                    document.getElementById('photo-preview').style.display = 'none';
+                    return;
+                }
+                
+                // Validate file type
+                if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+                    alert('Only JPEG, PNG, and WebP images are allowed');
+                    e.target.value = '';
+                    document.getElementById('photo-preview').style.display = 'none';
+                    return;
+                }
+                
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview-image').src = e.target.result;
+                    document.getElementById('photo-preview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('photo-preview').style.display = 'none';
+            }
+        });
+    </script>
 }
