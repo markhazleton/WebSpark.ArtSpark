@@ -1,0 +1,389 @@
+openapi: 3.0.3
+info:
+  title: WebSpark.ArtSpark Demo User Profile API
+  version: 0.1.0
+  description: >-
+    Contract additions for enhanced registration, profile photo management, role-based access,
+    and admin user management within WebSpark.ArtSpark.Demo.
+servers:
+  - url: https://artspark.markhazleton.com
+paths:
+  /account/register:
+    post:
+      summary: Register a new user account.
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [email, password, displayName]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                displayName:
+                  type: string
+                  maxLength: 100
+                bio:
+                  type: string
+                  maxLength: 500
+                profilePhoto:
+                  type: string
+                  format: binary
+            encoding:
+              profilePhoto:
+                contentType: image/jpeg, image/png, image/webp
+      responses:
+        '201':
+          description: Account created and user signed in.
+        '400':
+          description: Validation error (password requirements, photo validation, duplicate email).
+  /account/profile:
+    get:
+      summary: Retrieve the authenticated user's profile.
+      operationId: getProfile
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Current profile information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+    put:
+      summary: Update the authenticated user's profile.
+      operationId: updateProfile
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                displayName:
+                  type: string
+                  maxLength: 100
+                bio:
+                  type: string
+                  maxLength: 500
+                email:
+                  type: string
+                  format: email
+      responses:
+        '204':
+          description: Profile updated.
+        '400':
+          description: Validation error.
+  /account/profile/photo:
+    put:
+      summary: Upload or replace the authenticated user's profile photo.
+      operationId: uploadProfilePhoto
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [profilePhoto]
+              properties:
+                profilePhoto:
+                  type: string
+                  format: binary
+            encoding:
+              profilePhoto:
+                contentType: image/jpeg, image/png, image/webp
+      responses:
+        '204':
+          description: Photo stored and thumbnails generated.
+        '400':
+          description: Validation error or unsupported file.
+    delete:
+      summary: Remove the authenticated user's profile photo.
+      operationId: deleteProfilePhoto
+      security:
+        - cookieAuth: []
+      responses:
+        '204':
+          description: Photo removed and default avatar restored.
+  /account/email/resend-confirmation:
+    post:
+      summary: Resend email verification link to the authenticated user.
+      operationId: resendEmailConfirmation
+      security:
+        - cookieAuth: []
+      responses:
+        '202':
+          description: Verification email scheduled.
+        '409':
+          description: Email already verified.
+  /admin/users:
+    get:
+      summary: List users with paging, filtering, and role metadata.
+      operationId: listUsers
+      security:
+        - cookieAuth: []
+        - adminRole: []
+      parameters:
+        - in: query
+          name: pageNumber
+          schema:
+            type: integer
+            minimum: 1
+          required: false
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+          required: false
+        - in: query
+          name: search
+          schema:
+            type: string
+          required: false
+      responses:
+        '200':
+          description: Paged list of users.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPage'
+        '403':
+          description: Forbidden.
+  /admin/users/{id}:
+    get:
+      summary: Retrieve details for a specific user including activity summary.
+      operationId: getUserDetail
+      security:
+        - cookieAuth: []
+        - adminRole: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User detail and activity overview.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDetail'
+        '404':
+          description: User not found.
+    patch:
+      summary: Update a user's profile and roles as an admin.
+      operationId: adminUpdateUser
+      security:
+        - cookieAuth: []
+        - adminRole: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                roles:
+                  type: array
+                  items:
+                    type: string
+                    enum: [User, Admin]
+                displayName:
+                  type: string
+                  maxLength: 100
+                bio:
+                  type: string
+                  maxLength: 500
+                emailVerified:
+                  type: boolean
+                lockoutEnabled:
+                  type: boolean
+      responses:
+        '204':
+          description: Update applied.
+        '400':
+          description: Validation error.
+        '403':
+          description: Forbidden.
+  /admin/users/{id}/audit:
+    get:
+      summary: Retrieve audit log entries for a user ordered by most recent.
+      operationId: listUserAudit
+      security:
+        - cookieAuth: []
+        - adminRole: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: pageNumber
+          schema:
+            type: integer
+            minimum: 1
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: Audit log page for the selected user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditPage'
+        '403':
+          description: Forbidden.
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: .AspNetCore.Cookies
+    adminRole:
+      type: apiKey
+      name: AdminRole
+      in: header
+      description: Logical gate enforced server-side via ASP.NET Core policy that requires the Admin role.
+  schemas:
+    Profile:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+        bio:
+          type: string
+          maxLength: 500
+        email:
+          type: string
+          format: email
+        emailVerified:
+          type: boolean
+        profilePhoto:
+          type: object
+          nullable: true
+          properties:
+            originalUrl:
+              type: string
+              format: uri
+            thumbnail64Url:
+              type: string
+              format: uri
+            thumbnail128Url:
+              type: string
+              format: uri
+            thumbnail256Url:
+              type: string
+              format: uri
+    UserPage:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+        pageNumber:
+          type: integer
+        pageSize:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserSummary'
+    UserSummary:
+      type: object
+      properties:
+        id:
+          type: string
+        displayName:
+          type: string
+        email:
+          type: string
+          format: email
+        emailVerified:
+          type: boolean
+        roles:
+          type: array
+          items:
+            type: string
+        profilePhotoThumbnail64Url:
+          type: string
+          format: uri
+        joinedOn:
+          type: string
+          format: date-time
+        lastActivityOn:
+          type: string
+          format: date-time
+    UserDetail:
+      allOf:
+        - $ref: '#/components/schemas/UserSummary'
+        - type: object
+          properties:
+            bio:
+              type: string
+            profilePhoto:
+              $ref: '#/components/schemas/Profile/properties/profilePhoto'
+            collectionsCount:
+              type: integer
+            reviewsCount:
+              type: integer
+            recentActivity:
+              type: array
+              items:
+                $ref: '#/components/schemas/AuditEntry'
+    AuditPage:
+      type: object
+      properties:
+        totalCount:
+          type: integer
+        pageNumber:
+          type: integer
+        pageSize:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditEntry'
+    AuditEntry:
+      type: object
+      properties:
+        id:
+          type: integer
+        actionType:
+          type: string
+        details:
+          type: object
+        adminUserId:
+          type: string
+        targetUserId:
+          type: string
+        correlationId:
+          type: string
+        createdAtUtc:
+          type: string
+          format: date-time
