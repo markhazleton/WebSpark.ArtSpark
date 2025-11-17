@@ -1,31 +1,42 @@
 {
-  "dotnet.defaultSolution": "${workspaceFolder}/WebSpark.ArtSpark.sln",
-  "omnisharp.defaultLaunchSolution": "${workspaceFolder}/WebSpark.ArtSpark.sln",
-  "files.exclude": {
-    "**/bin": true,
-    "**/obj": true,
-    "**/.vs": true
-  },
-  "files.watcherExclude": {
-    "**/bin/**": true,
-    "**/obj/**": true,
-    "**/.vs/**": true
-  },
-  "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.organizeImports": "explicit"
-  },
-  "dotnet.completion.showCompletionItemsFromUnimportedNamespaces": true,
-  "dotnet.server.useOmnisharp": false,
-  "csharp.semanticHighlighting.enabled": true,
-  "csharp.format.enable": true,
-  "csharp.inlayHints.enableInlayHintsForParameters": true,
-  "csharp.inlayHints.enableInlayHintsForLiteralParameters": true,
-  "csharp.inlayHints.enableInlayHintsForIndexerParameters": true,
-  "csharp.inlayHints.enableInlayHintsForObjectCreationParameters": true,
-  "csharp.inlayHints.enableInlayHintsForOtherParameters": true,
-  "csharp.inlayHints.enableInlayHintsForTypes": true,
-  "csharp.inlayHints.enableInlayHintsForImplicitVariableTypes": true,
-  "csharp.inlayHints.enableInlayHintsForLambdaParameterTypes": true,
-  "csharp.inlayHints.enableInlayHintsForImplicitObjectCreation": true
+    "dotnet.defaultSolution": "${workspaceFolder}/WebSpark.ArtSpark.sln",
+    "omnisharp.defaultLaunchSolution": "${workspaceFolder}/WebSpark.ArtSpark.sln",
+    "files.exclude": {
+        "**/bin": true,
+        "**/obj": true,
+        "**/.vs": true
+    },
+    "files.watcherExclude": {
+        "**/bin/**": true,
+        "**/obj/**": true,
+        "**/.vs/**": true
+    },
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    "dotnet.completion.showCompletionItemsFromUnimportedNamespaces": true,
+    "dotnet.server.useOmnisharp": false,
+    "csharp.semanticHighlighting.enabled": true,
+    "csharp.format.enable": true,
+    "csharp.inlayHints.enableInlayHintsForParameters": true,
+    "csharp.inlayHints.enableInlayHintsForLiteralParameters": true,
+    "csharp.inlayHints.enableInlayHintsForIndexerParameters": true,
+    "csharp.inlayHints.enableInlayHintsForObjectCreationParameters": true,
+    "csharp.inlayHints.enableInlayHintsForOtherParameters": true,
+    "csharp.inlayHints.enableInlayHintsForTypes": true,
+    "csharp.inlayHints.enableInlayHintsForImplicitVariableTypes": true,
+    "csharp.inlayHints.enableInlayHintsForLambdaParameterTypes": true,
+    "csharp.inlayHints.enableInlayHintsForImplicitObjectCreation": true,
+    "chat.promptFilesRecommendations": {
+        "speckit.constitution": true,
+        "speckit.specify": true,
+        "speckit.plan": true,
+        "speckit.tasks": true,
+        "speckit.implement": true
+    },
+    "chat.tools.terminal.autoApprove": {
+        ".specify/scripts/bash/": true,
+        ".specify/scripts/powershell/": true
+    }
 }

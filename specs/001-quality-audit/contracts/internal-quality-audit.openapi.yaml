@@ -1,0 +1,198 @@
+openapi: 3.1.0
+info:
+  title: WebSpark Quality Audit Service
+  version: 0.1.0
+  description: >-
+    Internal contract for triggering repository-wide quality audits and retrieving
+    generated Markdown reports that summarize build diagnostics, dependency currency,
+    and safeguard checks for WebSpark.ArtSpark.Demo.
+servers:
+  - url: https://artspark.markhazleton.com/internal
+    description: Demo deployment (authenticated maintainers only)
+paths:
+  /quality-audit/run:
+    post:
+      summary: Trigger a quality audit run
+      description: Starts an asynchronous audit execution and returns the report location when complete.
+      operationId: startQualityAudit
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: false
+      responses:
+        '202':
+          description: Audit started successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reportId:
+                    type: string
+                    description: Identifier for the generated report (ISO date + run suffix)
+                  statusEndpoint:
+                    type: string
+                    format: uri
+                    description: Polling endpoint to monitor audit progress
+        '409':
+          description: An audit is already running
+        '500':
+          description: Audit failed to initialize
+  /quality-audit/reports/{reportId}:
+    get:
+      summary: Retrieve a completed audit report
+      operationId: getQualityAuditReport
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: reportId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Identifier returned from `POST /quality-audit/run`
+      responses:
+        '200':
+          description: Markdown-formatted audit report
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditReport'
+        '404':
+          description: Report not found
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    AuditReport:
+      type: object
+      required:
+        - reportId
+        - generatedAt
+        - generatedBy
+        - diagnostics
+        - dependencies
+        - safeguards
+      properties:
+        reportId:
+          type: string
+        generatedAt:
+          type: string
+          format: date-time
+        generatedBy:
+          type: string
+        executionDurationSeconds:
+          type: number
+          format: float
+        summary:
+          type: string
+        diagnostics:
+          type: array
+          items:
+            $ref: '#/components/schemas/BuildHealthFinding'
+        dependencies:
+          type: array
+          items:
+            $ref: '#/components/schemas/PackageCurrencyEntry'
+        safeguards:
+          type: array
+          items:
+            $ref: '#/components/schemas/SafeguardControlCheck'
+        backlogRecommendations:
+          type: array
+          items:
+            type: string
+    BuildHealthFinding:
+      type: object
+      required:
+        - sourceProject
+        - diagnosticId
+        - severity
+        - message
+      properties:
+        sourceProject:
+          type: string
+        filePath:
+          type: string
+        lineNumber:
+          type: integer
+          minimum: 1
+        diagnosticId:
+          type: string
+        severity:
+          type: string
+          enum: [Error, Warning, Info]
+        category:
+          type: string
+          enum: [Compiler, Analyzer, Build, Test]
+        message:
+          type: string
+        recommendedFix:
+          type: string
+        owner:
+          type: string
+        linkedDependencies:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+          enum: [Open, Planned, Resolved, Deferred]
+    PackageCurrencyEntry:
+      type: object
+      required:
+        - sourceProject
+        - packageName
+        - currentVersion
+      properties:
+        sourceProject:
+          type: string
+        packageName:
+          type: string
+        packageManager:
+          type: string
+          enum: [NuGet, npm]
+        currentVersion:
+          type: string
+        latestStableVersion:
+          type: string
+        releaseAgeDays:
+          type: integer
+        severity:
+          type: string
+          enum: [UpToDate, Minor, Major, Security]
+        compatibilityRisk:
+          type: string
+        recommendedAction:
+          type: string
+        notes:
+          type: string
+    SafeguardControlCheck:
+      type: object
+      required:
+        - controlName
+        - outcome
+      properties:
+        controlName:
+          type: string
+        description:
+          type: string
+        evidence:
+          type: string
+        outcome:
+          type: string
+          enum: [Pass, Fail, NeedsFollowUp]
+        followUpAction:
+          type: string
+        owner:
+          type: string
+        dueDate:
+          type: string
+          format: date
+        relatedComponents:
+          type: array
+          items:
+            type: string
