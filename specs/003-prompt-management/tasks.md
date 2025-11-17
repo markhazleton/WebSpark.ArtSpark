@@ -12,10 +12,10 @@ description: "Implementation tasks for AI Persona Prompt Management System"
 
 **Purpose**: Prepare repository structure and baseline configuration for persona prompt files.
 
-- [ ] T001 Restore NuGet packages for `WebSpark.ArtSpark.sln`
-- [ ] T002 Create prompt directory scaffold `WebSpark.ArtSpark.Demo/prompts/agents/`
-- [ ] T003 Add `ArtSparkAgent:Prompts` defaults (DataPath, FallbackToDefault, DefaultMetadata) to `WebSpark.ArtSpark.Demo/appsettings.Development.json`
-- [ ] T004 Mirror production-safe prompt settings in `WebSpark.ArtSpark.Demo/appsettings.json`
+- [X] T001 Restore NuGet packages for `WebSpark.ArtSpark.sln`
+- [X] T002 Create prompt directory scaffold `WebSpark.ArtSpark.Demo/prompts/agents/`
+- [X] T003 Add `ArtSparkAgent:Prompts` defaults (DataPath, FallbackToDefault, DefaultMetadata) to `WebSpark.ArtSpark.Demo/appsettings.Development.json`
+- [X] T004 Mirror production-safe prompt settings in `WebSpark.ArtSpark.Demo/appsettings.json`
 
 ---
 
@@ -23,12 +23,12 @@ description: "Implementation tasks for AI Persona Prompt Management System"
 
 **Purpose**: Establish core configuration, options, and DI hooks that all user stories depend on.
 
-- [ ] T005 Implement prompt options model with metadata defaults in `WebSpark.ArtSpark.Agent/Configuration/PromptOptions.cs`
-- [ ] T006 [P] Define persona prompt configuration map with token whitelist and default metadata in `WebSpark.ArtSpark.Agent/Configuration/PersonaPromptConfiguration.cs`
-- [ ] T007 Update `WebSpark.ArtSpark.Agent/Extensions/ServiceCollectionExtensions.cs` to register prompt options, loader, and decorator services
-- [ ] T008 Configure prompt options binding and fallback toggles in `WebSpark.ArtSpark.Demo/Program.cs`
+- [X] T005 Implement prompt options model with metadata defaults in `WebSpark.ArtSpark.Agent/Configuration/PromptOptions.cs`
+- [X] T006 [P] Define persona prompt configuration map with token whitelist and default metadata in `WebSpark.ArtSpark.Agent/Configuration/PersonaPromptConfiguration.cs`
+- [X] T007 Update `WebSpark.ArtSpark.Agent/Extensions/ServiceCollectionExtensions.cs` to register prompt options, loader, and decorator services
+- [X] T008 Configure prompt options binding and fallback toggles in `WebSpark.ArtSpark.Demo/Program.cs`
 - [ ] T009 [P] Add configuration validation tests in `WebSpark.ArtSpark.Tests/Agent/Configuration/PromptOptionsValidationTests.cs`
-- [ ] T010a [P] Implement prompt data path validation at startup with warning logs when directory is missing or unreadable
+- [X] T010a [P] Implement prompt data path validation at startup with warning logs when directory is missing or unreadable
 - [ ] T010b [P] Add prompt path validation coverage in `PromptOptionsValidationTests.cs`
 - [ ] T010 [P] Document configuration schema in `specs/003-prompt-management/contracts/appsettings.ArtSparkAgent.Prompts.schema.json`
 
@@ -51,14 +51,14 @@ description: "Implementation tasks for AI Persona Prompt Management System"
 
 ### Implementation for User Story 1
 
-- [ ] T015 [US1] Implement `PromptMetadataParser` for YAML front matter in `WebSpark.ArtSpark.Agent/Services/PromptMetadataParser.cs`
-- [ ] T016 [P] [US1] Update `WebSpark.ArtSpark.Agent/Models/PromptTemplate.cs` to store metadata overrides and validation state
-- [ ] T017 [US1] Implement file-backed `PromptLoader` to parse markdown, enforce sections, validate tokens, and merge metadata in `WebSpark.ArtSpark.Agent/Services/PromptLoader.cs`
-- [ ] T018 [P] [US1] Create `FileBackedPersonaHandler` decorator in `WebSpark.ArtSpark.Agent/Personas/FileBackedPersonaHandler.cs`
-- [ ] T019 [P] [US1] Expose fallback prompt accessors in persona classes within `WebSpark.ArtSpark.Agent/Personas/`
-- [ ] T020 [US1] Update `WebSpark.ArtSpark.Agent/Personas/PersonaFactory.cs` to resolve decorators via `IPromptLoader`
-- [ ] T021 [US1] Seed markdown prompt files with YAML front matter in `WebSpark.ArtSpark.Demo/prompts/agents/`
-- [ ] T022 [US1] Register prompt loader pipeline inside `WebSpark.ArtSpark.Demo/Program.cs`
+- [X] T015 [US1] Implement `PromptMetadataParser` for YAML front matter in `WebSpark.ArtSpark.Agent/Services/PromptMetadataParser.cs`
+- [X] T016 [P] [US1] Update `WebSpark.ArtSpark.Agent/Models/PromptTemplate.cs` to store metadata overrides and validation state
+- [X] T017 [US1] Implement file-backed `PromptLoader` to parse markdown, enforce sections, validate tokens, and merge metadata in `WebSpark.ArtSpark.Agent/Services/PromptLoader.cs`
+- [X] T018 [P] [US1] Create `FileBackedPersonaHandler` decorator in `WebSpark.ArtSpark.Agent/Personas/FileBackedPersonaHandler.cs`
+- [X] T019 [P] [US1] Expose fallback prompt accessors in persona classes within `WebSpark.ArtSpark.Agent/Personas/`
+- [X] T020 [US1] Update `WebSpark.ArtSpark.Agent/Personas/PersonaFactory.cs` to resolve decorators via `IPromptLoader`
+- [X] T021 [US1] Seed markdown prompt files with YAML front matter in `WebSpark.ArtSpark.Demo/prompts/agents/`
+- [X] T022 [US1] Register prompt loader pipeline inside `WebSpark.ArtSpark.Demo/Program.cs`
 
 **Checkpoint**: Persona prompts load from files with safe fallback, enabling non-developer updates.
 
