@@ -1,16 +1,16 @@
 // Profile Edit Helper Script
-(function() {
+(function () {
     'use strict';
-    
+
     // Bio character counter
     const bioInput = document.getElementById('bio-input');
     const bioCounter = document.getElementById('bio-counter');
-    
+
     if (bioInput && bioCounter) {
-        bioInput.addEventListener('input', function() {
+        bioInput.addEventListener('input', function () {
             const length = this.value.length;
             bioCounter.textContent = length;
-            
+
             if (length > 450) {
                 bioCounter.className = 'text-warning fw-bold';
             } else if (length === 500) {
@@ -20,15 +20,15 @@
             }
         });
     }
-    
+
     // Photo preview
     const newPhotoInput = document.getElementById('new-photo-input');
     const currentPhoto = document.getElementById('current-photo');
     const defaultAvatar = document.getElementById('default-avatar');
     const removePhotoCheck = document.getElementById('remove-photo-check');
-    
+
     if (newPhotoInput) {
-        newPhotoInput.addEventListener('change', function(e) {
+        newPhotoInput.addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (file) {
                 // Validate file size (5MB max)
@@ -37,17 +37,17 @@
                     e.target.value = '';
                     return;
                 }
-                
+
                 // Validate file type
                 if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
                     alert('Only JPEG, PNG, and WebP images are allowed');
                     e.target.value = '';
                     return;
                 }
-                
+
                 // Show preview
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     if (currentPhoto) {
                         currentPhoto.src = e.target.result;
                     } else if (defaultAvatar) {
@@ -64,7 +64,7 @@
                     }
                 };
                 reader.readAsDataURL(file);
-                
+
                 // Uncheck remove photo if user is uploading new one
                 if (removePhotoCheck) {
                     removePhotoCheck.checked = false;
@@ -72,10 +72,10 @@
             }
         });
     }
-    
+
     // Disable new photo input when remove is checked
     if (removePhotoCheck && newPhotoInput) {
-        removePhotoCheck.addEventListener('change', function() {
+        removePhotoCheck.addEventListener('change', function () {
             if (this.checked) {
                 newPhotoInput.value = '';
                 newPhotoInput.disabled = true;

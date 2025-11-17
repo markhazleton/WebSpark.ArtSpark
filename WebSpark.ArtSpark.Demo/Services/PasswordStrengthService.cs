@@ -15,7 +15,7 @@ public class PasswordStrengthService : IPasswordStrengthService
     {
         _logger = logger;
         _commonPasswords = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        
+
         // Load common passwords from file
         var filePath = Path.Combine(environment.ContentRootPath, "Data", "common-passwords.txt");
         if (File.Exists(filePath))

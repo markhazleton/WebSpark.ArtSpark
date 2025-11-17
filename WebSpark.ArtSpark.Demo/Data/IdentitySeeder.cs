@@ -15,7 +15,7 @@ public static class IdentitySeeder
 
         // Seed roles
         var defaultRoles = configuration.GetSection("Identity:DefaultRoles").Get<string[]>() ?? new[] { "User", "Admin" };
-        
+
         foreach (var roleName in defaultRoles)
         {
             if (!await roleManager.RoleExistsAsync(roleName))
@@ -27,7 +27,7 @@ public static class IdentitySeeder
                 }
                 else
                 {
-                    logger.LogError("Failed to create role {RoleName}: {Errors}", 
+                    logger.LogError("Failed to create role {RoleName}: {Errors}",
                         roleName, string.Join(", ", result.Errors.Select(e => e.Description)));
                 }
             }
@@ -61,7 +61,7 @@ public static class IdentitySeeder
                 }
                 else
                 {
-                    logger.LogError("Failed to create bootstrap admin: {Errors}", 
+                    logger.LogError("Failed to create bootstrap admin: {Errors}",
                         string.Join(", ", result.Errors.Select(e => e.Description)));
                 }
             }
@@ -85,7 +85,7 @@ public static class IdentitySeeder
                 await userManager.AddToRoleAsync(user, "Admin");
                 logger.LogInformation("Added Admin role to existing user: {Email}", user.Email);
             }
-            
+
             if (!await userManager.IsInRoleAsync(user, "User"))
             {
                 await userManager.AddToRoleAsync(user, "User");

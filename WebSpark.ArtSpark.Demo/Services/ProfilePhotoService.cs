@@ -21,7 +21,7 @@ public class ProfilePhotoService : IProfilePhotoService
         _options = options.Value;
         _logger = logger;
         _uploadPath = Path.GetFullPath(_options.ProfilePhotoPath);
-        
+
         // Ensure upload directory exists
         if (!Directory.Exists(_uploadPath))
         {
@@ -31,8 +31,8 @@ public class ProfilePhotoService : IProfilePhotoService
     }
 
     public async Task<ProfilePhotoUploadResult> UploadPhotoAsync(
-        IFormFile file, 
-        string userId, 
+        IFormFile file,
+        string userId,
         CancellationToken cancellationToken = default)
     {
         try
@@ -55,10 +55,10 @@ public class ProfilePhotoService : IProfilePhotoService
             // Load and process image
             using var stream = file.OpenReadStream();
             using var image = await ImageSharpImage.LoadAsync(stream, cancellationToken);
-            
+
             // Auto-orient based on EXIF data
             image.Mutate(x => x.AutoOrient());
-            
+
             // Strip metadata for privacy
             image.Metadata.ExifProfile = null;
             image.Metadata.IptcProfile = null;

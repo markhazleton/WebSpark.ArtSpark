@@ -30,19 +30,19 @@ public class ArtSparkDbContext : IdentityDbContext<ApplicationUser>
             entity.HasIndex(e => e.Email).IsUnique();
             entity.HasIndex(e => e.UserName).IsUnique();
         });
-        
+
         // Configure AuditLog
         modelBuilder.Entity<AuditLog>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.HasIndex(e => new { e.AdminUserId, e.CreatedAtUtc });
             entity.HasIndex(e => new { e.TargetUserId, e.CreatedAtUtc });
-            
+
             entity.HasOne(e => e.AdminUser)
                   .WithMany()
                   .HasForeignKey(e => e.AdminUserId)
                   .OnDelete(DeleteBehavior.Restrict);
-                  
+
             entity.HasOne(e => e.TargetUser)
                   .WithMany()
                   .HasForeignKey(e => e.TargetUserId)

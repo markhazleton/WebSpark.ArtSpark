@@ -76,7 +76,7 @@ public class AccountController : Controller
                         user.ProfilePhotoThumbnail128 = photoResult.Thumbnail128;
                         user.ProfilePhotoThumbnail256 = photoResult.Thumbnail256;
                         await _userManager.UpdateAsync(user);
-                        
+
                         _logger.LogInformation("Profile photo uploaded for user {UserId} during registration", user.Id);
                     }
                     else
@@ -87,10 +87,10 @@ public class AccountController : Controller
 
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 _logger.LogInformation("User {UserId} created a new account with password", user.Id);
-                
+
                 // Log registration event
                 await _auditLogService.LogActionAsync("UserRegistered", user.Id, user.Id, new { Email = user.Email, HasPhoto = model.ProfilePhoto != null });
-                
+
                 return RedirectToAction("Index", "Home");
             }
 
@@ -193,7 +193,7 @@ public class AccountController : Controller
 
         user.DisplayName = model.DisplayName;
         user.Bio = model.Bio;
-        
+
         // Handle email changes
         if (user.Email != model.Email)
         {
@@ -231,7 +231,7 @@ public class AccountController : Controller
                 {
                     await _profilePhotoService.DeletePhotoAsync(user.Id);
                 }
-                
+
                 user.ProfilePhotoFileName = photoResult.FileName;
                 user.ProfilePhotoThumbnail64 = photoResult.Thumbnail64;
                 user.ProfilePhotoThumbnail128 = photoResult.Thumbnail128;

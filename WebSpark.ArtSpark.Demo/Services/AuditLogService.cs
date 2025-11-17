@@ -38,11 +38,11 @@ public class AuditLogService : IAuditLogService
         try
         {
             var correlationId = _httpContextAccessor.HttpContext?.TraceIdentifier;
-            
-            var detailsJson = details != null 
+
+            var detailsJson = details != null
                 ? JsonSerializer.Serialize(details, new JsonSerializerOptions { WriteIndented = false })
                 : null;
-            
+
             // Truncate if too large
             if (detailsJson?.Length > 4000)
             {

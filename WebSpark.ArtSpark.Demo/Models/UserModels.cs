@@ -7,30 +7,30 @@ public class ApplicationUser : IdentityUser
 {
     public string DisplayName { get; set; } = string.Empty;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    
+
     [PersonalData]
     [MaxLength(500)]
     public string? Bio { get; set; }
-    
+
     [PersonalData]
     [MaxLength(260)]
     public string? ProfilePhotoFileName { get; set; }
-    
+
     [PersonalData]
     [MaxLength(260)]
     public string? ProfilePhotoThumbnail64 { get; set; }
-    
+
     [PersonalData]
     [MaxLength(260)]
     public string? ProfilePhotoThumbnail128 { get; set; }
-    
+
     [PersonalData]
     [MaxLength(260)]
     public string? ProfilePhotoThumbnail256 { get; set; }
-    
+
     [Obsolete("Use ProfilePhotoThumbnail* properties instead")]
     public string? ProfileImageUrl { get; set; }
-    
+
     public bool EmailVerified { get; set; } = false;
 
     // Navigation properties
@@ -42,30 +42,30 @@ public class ApplicationUser : IdentityUser
 public class AuditLog
 {
     public long Id { get; set; }
-    
+
     [Required]
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
-    
+
     [Required]
     [MaxLength(100)]
     public string ActionType { get; set; } = string.Empty;
-    
+
     [MaxLength(4000)]
     public string? Details { get; set; }
-    
+
     [Required]
     [MaxLength(450)]
     public string AdminUserId { get; set; } = string.Empty;
-    
+
     [MaxLength(450)]
     public string? TargetUserId { get; set; }
-    
+
     [MaxLength(64)]
     public string? CorrelationId { get; set; }
-    
+
     [Timestamp]
     public byte[]? RowVersion { get; set; }
-    
+
     // Navigation properties
     public virtual ApplicationUser AdminUser { get; set; } = null!;
     public virtual ApplicationUser? TargetUser { get; set; }
@@ -246,7 +246,7 @@ public class RegisterViewModel
     [Display(Name = "Display Name")]
     [StringLength(100, ErrorMessage = "Display name must be at most {1} characters long.")]
     public string DisplayName { get; set; } = string.Empty;
-    
+
     [Display(Name = "Profile Photo (optional)")]
     public IFormFile? ProfilePhoto { get; set; }
 }
@@ -270,13 +270,13 @@ public class ProfileViewModel
 
     [Display(Name = "Profile Photo")]
     public IFormFile? NewProfilePhoto { get; set; }
-    
+
     public string? CurrentPhotoUrl { get; set; }
     public bool RemovePhoto { get; set; }
 
     [Display(Name = "Member Since")]
     public DateTime CreatedAt { get; set; }
-    
+
     public int BioCharactersRemaining => 500 - (Bio?.Length ?? 0);
 }
 
