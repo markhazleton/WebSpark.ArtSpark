@@ -27,7 +27,7 @@ description: "Implementation tasks for AI Persona Prompt Management System"
 - [ ] T006 [P] Define persona prompt configuration map with token whitelist and default metadata in `WebSpark.ArtSpark.Agent/Configuration/PersonaPromptConfiguration.cs`
 - [ ] T007 Update `WebSpark.ArtSpark.Agent/Extensions/ServiceCollectionExtensions.cs` to register prompt options, loader, and decorator services
 - [ ] T008 Configure prompt options binding and fallback toggles in `WebSpark.ArtSpark.Demo/Program.cs`
-- [ ] T009 [P] Add configuration validation tests in `WebSpark.ArtSpark.Agent.Tests/Configuration/PromptOptionsValidationTests.cs`
+- [ ] T009 [P] Add configuration validation tests in `WebSpark.ArtSpark.Tests/Agent/Configuration/PromptOptionsValidationTests.cs`
 - [ ] T010 [P] Document configuration schema in `specs/003-prompt-management/contracts/appsettings.ArtSparkAgent.Prompts.schema.json`
 
 **Checkpoint**: Prompt configuration and DI scaffolding are in place for all personas.
@@ -42,10 +42,10 @@ description: "Implementation tasks for AI Persona Prompt Management System"
 
 ### Tests for User Story 1
 
-- [ ] T011 [P] [US1] Add `PromptLoaderTests` covering markdown load, front matter parsing, and strict fallback in `WebSpark.ArtSpark.Agent.Tests/Services/PromptLoaderTests.cs`
-- [ ] T012 [P] [US1] Add metadata merge tests in `WebSpark.ArtSpark.Agent.Tests/Services/PromptLoaderMetadataTests.cs`
-- [ ] T013 [P] [US1] Add token validation tests in `WebSpark.ArtSpark.Agent.Tests/Services/PromptTemplateTokenTests.cs`
-- [ ] T014 [P] [US1] Extend `PersonaFactoryTests` for file-backed handler resolution in `WebSpark.ArtSpark.Agent.Tests/Personas/PersonaFactoryTests.cs`
+- [ ] T011 [P] [US1] Add `PromptLoaderTests` covering markdown load, front matter parsing, and strict fallback in `WebSpark.ArtSpark.Tests/Agent/Services/PromptLoaderTests.cs`
+- [ ] T012 [P] [US1] Add metadata merge tests in `WebSpark.ArtSpark.Tests/Agent/Services/PromptLoaderMetadataTests.cs`
+- [ ] T013 [P] [US1] Add token validation tests in `WebSpark.ArtSpark.Tests/Agent/Services/PromptTemplateTokenTests.cs`
+- [ ] T014 [P] [US1] Extend `PersonaFactoryTests` for file-backed handler resolution in `WebSpark.ArtSpark.Tests/Agent/Personas/PersonaFactoryTests.cs`
 
 ### Implementation for User Story 1
 
@@ -70,8 +70,8 @@ description: "Implementation tasks for AI Persona Prompt Management System"
 
 ### Tests for User Story 2
 
-- [ ] T023 [P] [US2] Add hot reload regression tests covering body and metadata reload in `WebSpark.ArtSpark.Agent.Tests/Services/PromptLoaderHotReloadTests.cs`
-- [ ] T024 [P] [US2] Add console harness tests for prompt variants in `WebSpark.ArtSpark.Console.Tests/PromptVariantTests.cs`
+- [ ] T023 [P] [US2] Add hot reload regression tests covering body and metadata reload in `WebSpark.ArtSpark.Tests/Agent/Services/PromptLoaderHotReloadTests.cs`
+- [ ] T024 [P] [US2] Add console harness tests for prompt variants in `WebSpark.ArtSpark.Tests/Console/PromptVariantTests.cs`
 
 ### Implementation for User Story 2
 
@@ -93,8 +93,8 @@ description: "Implementation tasks for AI Persona Prompt Management System"
 
 ### Tests for User Story 3
 
-- [ ] T030 [P] [US3] Add audit logging tests in `WebSpark.ArtSpark.Agent.Tests/Services/PromptAuditLoggingTests.cs`
-- [ ] T031 [US3] Add Demo integration test verifying file-based, metadata overrides, and fallback prompts in `WebSpark.ArtSpark.Demo/Tests/Integration/PromptFallbackTests.cs`
+- [ ] T030 [P] [US3] Add audit logging tests in `WebSpark.ArtSpark.Tests/Agent/Services/PromptAuditLoggingTests.cs`
+- [ ] T031 [US3] Add Demo integration test verifying file-based, metadata overrides, and fallback prompts in `WebSpark.ArtSpark.Tests/Demo/PromptFallbackTests.cs`
 
 ### Implementation for User Story 3
 
@@ -120,6 +120,7 @@ description: "Implementation tasks for AI Persona Prompt Management System"
 - [ ] T042 Run full test suite `dotnet test WebSpark.ArtSpark.Tests`
 - [ ] T043 [P] Verify quickstart steps and hot reload workflow in `specs/003-prompt-management/quickstart.md`
 - [ ] T044 Capture prompt load performance metrics (<50ms) via Serilog log review or benchmark script
+- [ ] T045 Draft release-note entry summarizing externalized prompts, metadata overrides, and logging enhancements
 
 ---
 

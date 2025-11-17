@@ -112,6 +112,8 @@ Site operators need to understand which prompt versions are active in production
 - **FR-011**: Agent MUST provide a dynamic file-backed `IPersonaHandler` implementation that replaces static `GenerateSystemPrompt` methods when persona prompt files are present
 - **FR-012**: System MUST support global default prompt metadata (e.g., `model`, `temperature`) in configuration, which can be overridden by YAML front matter in individual prompt files.
 - **FR-013**: When hot-reload is enabled, changes to prompt file front matter MUST be reloaded and trigger a `ConfigurationReloaded` log event.
+- **FR-014**: System MUST allow selecting prompt variants via configuration to load alternate persona prompt files (e.g., `prompts/agents/variants/`).
+- **FR-015**: Demo MUST surface active prompt metadata (file hashes, fallback status) through operator-facing telemetry, including footer build metadata.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -143,13 +145,13 @@ Site operators need to understand which prompt versions are active in production
 ## Observability & Testing Plan *(mandatory)*
 
 - **Automated Tests**: 
-  - **Agent.Tests**: New `PromptLoaderTests` class covering file loading, fallback behavior, token replacement, validation failures
-  - **Agent.Tests**: Updated `PersonaFactoryTests` to verify integration with prompt loader
-  - **Agent.Tests**: New `PromptTemplateTokenTests` for injection attack prevention
-  - **Demo.Tests**: Integration test verifying AI chat works with both file-based and fallback prompts
+  - `WebSpark.ArtSpark.Tests/Agent/Services/PromptLoaderTests.cs`: covers markdown load, fallback behavior, token replacement, validation failures
+  - `WebSpark.ArtSpark.Tests/Agent/Personas/PersonaFactoryTests.cs`: verifies integration with prompt loader
+  - `WebSpark.ArtSpark.Tests/Agent/Services/PromptTemplateTokenTests.cs`: prevents injection attacks via whitelist validation
+  - `WebSpark.ArtSpark.Tests/Demo/PromptFallbackTests.cs`: ensures AI chat works with file-based and fallback prompts
 
-- **Logging & Metrics**: 
-- Serilog structured events: `PromptLoaded`, `PromptLoadFailed`, `PromptFallbackUsed`, `PromptTokenValidationFailed`, `ConfigurationReloaded`
+- **Logging & Metrics**:
+  - Serilog structured events: `PromptLoaded`, `PromptLoadFailed`, `PromptFallbackUsed`, `PromptTokenValidationFailed`, `ConfigurationReloaded`
   - Log properties: `PersonaType`, `FilePath`, `FileSize`, `ContentHash`, `ErrorDetails`
   - Performance metric: Prompt load duration (should be <50ms for file read + parse)
 
