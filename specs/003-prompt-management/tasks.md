@@ -114,10 +114,10 @@ description: "Implementation tasks for AI Persona Prompt Management System"
 
 **Purpose**: Finalize documentation, validation, and regression coverage across the feature.
 
-- [ ] T037 Update authoring guidance in `docs/copilot/prompt-authoring-guide.md`
+- [X] T037 Update authoring guidance in `docs/copilot/prompt-authoring-guide.md`
 - [ ] T038 [P] Coordinate review of `docs/copilot/prompt-authoring-guide.md` with content stakeholders
-- [ ] T039 [P] Document prompt management usage in `WebSpark.ArtSpark.Agent/README.md`
-- [ ] T040 [P] Refresh configuration instructions in `README.md`
+- [X] T039 [P] Document prompt management usage in `WebSpark.ArtSpark.Agent/README.md`
+- [X] T040 [P] Refresh configuration instructions in `README.md`
 - [ ] T041 Update `docs/AI-Chat-Personas-Implementation.md` with prompt management architecture changes
 - [X] T042 Run full test suite `dotnet test WebSpark.ArtSpark.Tests`
 - [ ] T043 [P] Verify quickstart steps and hot reload workflow in `specs/003-prompt-management/quickstart.md`

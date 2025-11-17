@@ -53,6 +53,8 @@ This solution provides a complete .NET ecosystem for interacting with the Art In
 - 🧠 **Conversation Memory**: Persistent chat history and contextual conversations
 - 🎯 **Cultural Sensitivity**: Respectful handling of cultural artifacts and educational contexts
 - 🛡️ **Guard Rails**: Input validation and content filtering for appropriate conversations
+- 📝 **Externalized Prompts**: Edit AI persona prompts without code changes (new in v1.1)
+- 🔥 **Hot Reload**: Live prompt updates in development without restarts (new in v1.1)
 
 ### 🚀 Demo Application Features
 
@@ -111,7 +113,7 @@ cd WebSpark.ArtSpark.Demo
 dotnet user-secrets set "ArtSparkAgent:OpenAI:ApiKey" "your-openai-api-key-here"
 ```
 
-1. Configure settings in `appsettings.json`:
+2. Configure settings in `appsettings.json`:
 
 ```json
 {
@@ -121,12 +123,33 @@ dotnet user-secrets set "ArtSparkAgent:OpenAI:ApiKey" "your-openai-api-key-here"
       "VisionModelId": "gpt-4o",
       "Temperature": 0.7
     },
+    "Prompts": {
+      "DataPath": "./prompts/agents",
+      "EnableHotReload": false,
+      "FallbackToDefault": true,
+      "DefaultMetadata": {
+        "ModelId": "gpt-4o",
+        "Temperature": 0.7,
+        "TopP": 0.9,
+        "MaxOutputTokens": 1000
+      }
+    },
     "Cache": {
       "Enabled": true
     }
   }
 }
 ```
+
+3. **(Optional) Customize AI Prompts**: Edit markdown files in `prompts/agents/` to personalize AI responses:
+   - `artspark.artwork.prompt.md` - Artwork persona prompts
+   - `artspark.artist.prompt.md` - Artist persona prompts
+   - `artspark.curator.prompt.md` - Curator persona prompts
+   - `artspark.historian.prompt.md` - Historian persona prompts
+
+   See [Prompt Authoring Guide](docs/copilot/prompt-authoring-guide.md) for detailed instructions.
+
+4. **(Development Only) Enable Hot Reload**: Set `EnableHotReload: true` in `appsettings.Development.json` to edit prompts without restarting.
 
 ### Basic Usage
 
