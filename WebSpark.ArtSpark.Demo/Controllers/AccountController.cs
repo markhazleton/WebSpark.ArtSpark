@@ -16,14 +16,20 @@ public class AccountController : Controller
     private readonly IFavoriteService _favoriteService;
     private readonly ICollectionService _collectionService;
     private readonly IArtInstituteClient _artInstituteClient;
-    private readonly ISeoOptimizationService _seoOptimizationService; public AccountController(
+    private readonly ISeoOptimizationService _seoOptimizationService;
+    private readonly IProfilePhotoService _profilePhotoService;
+    private readonly IAuditLogService _auditLogService;
+
+    public AccountController(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
         ILogger<AccountController> logger,
         IFavoriteService favoriteService,
         ICollectionService collectionService,
         IArtInstituteClient artInstituteClient,
-        ISeoOptimizationService seoOptimizationService)
+        ISeoOptimizationService seoOptimizationService,
+        IProfilePhotoService profilePhotoService,
+        IAuditLogService auditLogService)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -32,6 +38,8 @@ public class AccountController : Controller
         _collectionService = collectionService;
         _artInstituteClient = artInstituteClient;
         _seoOptimizationService = seoOptimizationService;
+        _profilePhotoService = profilePhotoService;
+        _auditLogService = auditLogService;
     }
 
     [HttpGet]
@@ -57,8 +65,32 @@ public class AccountController : Controller
 
             if (result.Succeeded)
             {
+                // Handle profile photo upload if provided
+                if (model.ProfilePhoto != null)
+                {
+                    var photoResult = await _profilePhotoService.UploadPhotoAsync(model.ProfilePhoto, user.Id);
+                    if (photoResult.Success)
+                    {
+                        user.ProfilePhotoFileName = photoResult.FileName;
+                        user.ProfilePhotoThumbnail64 = photoResult.Thumbnail64;
+                        user.ProfilePhotoThumbnail128 = photoResult.Thumbnail128;
+                        user.ProfilePhotoThumbnail256 = photoResult.Thumbnail256;
+                        await _userManager.UpdateAsync(user);
+
+                        _logger.LogInformation("Profile photo uploaded for user {UserId} during registration", user.Id);
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Failed to upload profile photo during registration: {Error}", photoResult.ErrorMessage);
+                    }
+                }
+
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                _logger.LogInformation("User created a new account with password.");
+                _logger.LogInformation("User {UserId} created a new account with password", user.Id);
+
+                // Log registration event
+                await _auditLogService.LogActionAsync("UserRegistered", user.Id, user.Id, new { Email = user.Email, HasPhoto = model.ProfilePhoto != null });
+
                 return RedirectToAction("Index", "Home");
             }
 
@@ -136,7 +168,7 @@ public class AccountController : Controller
             DisplayName = user.DisplayName,
             Email = user.Email!,
             Bio = user.Bio,
-            ProfileImageUrl = user.ProfileImageUrl,
+            CurrentPhotoUrl = _profilePhotoService.GetPhotoUrl(user.ProfilePhotoThumbnail128),
             CreatedAt = user.CreatedAt
         };
 
@@ -161,11 +193,64 @@ public class AccountController : Controller
 
         user.DisplayName = model.DisplayName;
         user.Bio = model.Bio;
-        user.ProfileImageUrl = model.ProfileImageUrl;
+
+        // Handle email changes
+        if (user.Email != model.Email)
+        {
+            var existingUser = await _userManager.FindByEmailAsync(model.Email);
+            if (existingUser != null && existingUser.Id != user.Id)
+            {
+                ModelState.AddModelError(nameof(model.Email), "This email is already in use. If this is your account, please use the password reset feature.");
+                model.CurrentPhotoUrl = _profilePhotoService.GetPhotoUrl(user.ProfilePhotoThumbnail128);
+                return View(model);
+            }
+            user.Email = model.Email;
+            user.UserName = model.Email;
+            user.EmailVerified = false; // Reset verification status
+            await _auditLogService.LogActionAsync("EmailChanged", user.Id, user.Id, new { OldEmail = user.Email, NewEmail = model.Email });
+        }
+
+        // Handle profile photo operations
+        if (model.RemovePhoto)
+        {
+            await _profilePhotoService.DeletePhotoAsync(user.Id);
+            user.ProfilePhotoFileName = null;
+            user.ProfilePhotoThumbnail64 = null;
+            user.ProfilePhotoThumbnail128 = null;
+            user.ProfilePhotoThumbnail256 = null;
+            _logger.LogInformation("Profile photo removed for user {UserId}", user.Id);
+            await _auditLogService.LogActionAsync("ProfilePhotoRemoved", user.Id, user.Id);
+        }
+        else if (model.NewProfilePhoto != null)
+        {
+            var photoResult = await _profilePhotoService.UploadPhotoAsync(model.NewProfilePhoto, user.Id);
+            if (photoResult.Success)
+            {
+                // Delete old photo if exists
+                if (!string.IsNullOrEmpty(user.ProfilePhotoFileName))
+                {
+                    await _profilePhotoService.DeletePhotoAsync(user.Id);
+                }
+
+                user.ProfilePhotoFileName = photoResult.FileName;
+                user.ProfilePhotoThumbnail64 = photoResult.Thumbnail64;
+                user.ProfilePhotoThumbnail128 = photoResult.Thumbnail128;
+                user.ProfilePhotoThumbnail256 = photoResult.Thumbnail256;
+                _logger.LogInformation("Profile photo updated for user {UserId}", user.Id);
+                await _auditLogService.LogActionAsync("ProfilePhotoUploaded", user.Id, user.Id);
+            }
+            else
+            {
+                ModelState.AddModelError(nameof(model.NewProfilePhoto), photoResult.ErrorMessage ?? "Failed to upload photo");
+                model.CurrentPhotoUrl = _profilePhotoService.GetPhotoUrl(user.ProfilePhotoThumbnail128);
+                return View(model);
+            }
+        }
 
         var result = await _userManager.UpdateAsync(user);
         if (result.Succeeded)
         {
+            _logger.LogInformation("Profile updated for user {UserId}", user.Id);
             TempData["SuccessMessage"] = "Profile updated successfully!";
             return RedirectToAction(nameof(Profile));
         }

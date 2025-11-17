@@ -10,6 +10,7 @@ public class ArtSparkDbContext : IdentityDbContext<ApplicationUser>
     {
     }
     public override DbSet<ApplicationUser> Users { get; set; }
+    public DbSet<AuditLog> AuditLogs { get; set; }
     public DbSet<ArtworkReview> Reviews { get; set; }
     public DbSet<UserFavorite> Favorites { get; set; }
     public DbSet<UserCollection> Collections { get; set; }
@@ -28,6 +29,24 @@ public class ArtSparkDbContext : IdentityDbContext<ApplicationUser>
             entity.HasKey(e => e.Id);
             entity.HasIndex(e => e.Email).IsUnique();
             entity.HasIndex(e => e.UserName).IsUnique();
+        });
+
+        // Configure AuditLog
+        modelBuilder.Entity<AuditLog>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.HasIndex(e => new { e.AdminUserId, e.CreatedAtUtc });
+            entity.HasIndex(e => new { e.TargetUserId, e.CreatedAtUtc });
+
+            entity.HasOne(e => e.AdminUser)
+                  .WithMany()
+                  .HasForeignKey(e => e.AdminUserId)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.TargetUser)
+                  .WithMany()
+                  .HasForeignKey(e => e.TargetUserId)
+                  .OnDelete(DeleteBehavior.Restrict);
         });
 
         // Configure ArtworkReview

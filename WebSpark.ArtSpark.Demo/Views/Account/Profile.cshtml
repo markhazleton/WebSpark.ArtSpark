@@ -21,42 +21,83 @@
                         </div>
                     }
 
-                    <form asp-action="Profile" method="post" class="needs-validation" novalidate>
+                    <form asp-action="Profile" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
                         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
                         <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="DisplayName" class="form-label">
-                                    <i class="bi bi-person me-1"></i>Display Name
+                            <div class="col-md-4 mb-3 text-center">
+                                <label class="form-label">
+                                    <i class="bi bi-image me-1"></i>Profile Photo
                                 </label>
-                                <input asp-for="DisplayName" class="form-control" placeholder="Enter your display name" required />
-                                <span asp-validation-for="DisplayName" class="text-danger"></span>
+                                <div class="mb-2">
+                                    @if (!string.IsNullOrEmpty(Model.CurrentPhotoUrl))
+                                    {
+                                        <img src="@Model.CurrentPhotoUrl" alt="Current profile photo" 
+                                             class="img-thumbnail rounded-circle" 
+                                             style="width: 150px; height: 150px; object-fit: cover;" 
+                                             id="current-photo" />
+                                    }
+                                    else
+                                    {
+                                        <div class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center" 
+                                             style="width: 150px; height: 150px; color: white; font-size: 3rem;"
+                                             id="default-avatar">
+                                            @Model.DisplayName.FirstOrDefault()
+                                        </div>
+                                    }
+                                </div>
+                                <div class="mb-2">
+                                    <input asp-for="NewProfilePhoto" class="form-control form-control-sm" 
+                                           type="file" accept="image/jpeg,image/png,image/webp" 
+                                           id="new-photo-input" />
+                                    <small class="form-text text-muted">Max 5MB (JPEG, PNG, WebP)</small>
+                                </div>
+                                @if (!string.IsNullOrEmpty(Model.CurrentPhotoUrl))
+                                {
+                                    <div class="form-check">
+                                        <input asp-for="RemovePhoto" class="form-check-input" id="remove-photo-check" />
+                                        <label asp-for="RemovePhoto" class="form-check-label">
+                                            Remove current photo
+                                        </label>
+                                    </div>
+                                }
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Email" class="form-label">
-                                    <i class="bi bi-envelope me-1"></i>Email Address
-                                </label>
-                                <input asp-for="Email" class="form-control" readonly />
-                                <div class="form-text">Email cannot be changed from this page.</div>
+
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label asp-for="DisplayName" class="form-label">
+                                        <i class="bi bi-person me-1"></i>Display Name
+                                    </label>
+                                    <input asp-for="DisplayName" class="form-control" placeholder="Enter your display name" required />
+                                    <span asp-validation-for="DisplayName" class="text-danger"></span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="Email" class="form-label">
+                                        <i class="bi bi-envelope me-1"></i>Email Address
+                                    </label>
+                                    <input asp-for="Email" class="form-control" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                    <div class="form-text">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Changing your email will require re-verification.
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label asp-for="Bio" class="form-label">
+                                        <i class="bi bi-chat-text me-1"></i>Bio
+                                    </label>
+                                    <textarea asp-for="Bio" class="form-control" rows="4" 
+                                              placeholder="Tell us a little about yourself..." 
+                                              maxlength="500" 
+                                              id="bio-input"></textarea>
+                                    <span asp-validation-for="Bio" class="text-danger"></span>
+                                    <div class="form-text">
+                                        <span id="bio-counter">@(Model.Bio?.Length ?? 0)</span> / 500 characters
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Bio" class="form-label">
-                                <i class="bi bi-chat-text me-1"></i>Bio
-                            </label>
-                            <textarea asp-for="Bio" class="form-control" rows="4" placeholder="Tell us a little about yourself..."></textarea>
-                            <span asp-validation-for="Bio" class="text-danger"></span>
-                            <div class="form-text">Optional. Maximum 500 characters.</div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="ProfileImageUrl" class="form-label">
-                                <i class="bi bi-image me-1"></i>Profile Image URL
-                            </label>
-                            <input asp-for="ProfileImageUrl" class="form-control" placeholder="https://example.com/your-image.jpg" />
-                            <span asp-validation-for="ProfileImageUrl" class="text-danger"></span>
-                            <div class="form-text">Optional. Enter a URL to your profile image.</div>
                         </div>
 
                         <div class="mb-4">
@@ -85,4 +126,5 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/profile-edit.js"></script>
 }
