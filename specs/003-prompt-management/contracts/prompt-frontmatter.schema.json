@@ -1,0 +1,43 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Persona Prompt Front Matter",
+    "type": "object",
+    "description": "Metadata overrides embedded at the top of persona prompt markdown files.",
+    "properties": {
+        "model": {
+            "type": "string",
+            "description": "OpenAI model identifier that overrides the persona's default (e.g., gpt-4o)."
+        },
+        "temperature": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Controls response randomness; higher values produce more varied output."
+        },
+        "top_p": {
+            "type": "number",
+            "minimum": 0.0,
+            "maximum": 1.0,
+            "description": "Nucleus sampling parameter; consider adjusting only when temperature < 1.0."
+        },
+        "max_output_tokens": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4096,
+            "description": "Hard limit on response token count for this persona prompt."
+        },
+        "frequency_penalty": {
+            "type": "number",
+            "minimum": -2.0,
+            "maximum": 2.0,
+            "description": "Discourages repeating phrases."
+        },
+        "presence_penalty": {
+            "type": "number",
+            "minimum": -2.0,
+            "maximum": 2.0,
+            "description": "Encourages introducing new topics."
+        }
+    },
+    "additionalProperties": false
+}

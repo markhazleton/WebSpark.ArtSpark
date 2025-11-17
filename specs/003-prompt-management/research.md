@@ -21,3 +21,15 @@
 ### Decision: Extend Agent DI with decorator pattern for persona handlers
 - **Rationale**: Preserves existing `IPersonaHandler` contracts while substituting file-backed prompts; aligns with existing HttpClient decorator patterns and keeps fallbacks intact.
 - **Alternatives considered**: Replace persona classes entirely (risk of regressions); add file reads inside each persona class (duplication, harder to test).
+
+### Decision: Hybrid prompt metadata configuration
+- **Rationale**: Stores global defaults (e.g., `model`, `temperature`) in configuration while allowing persona prompt files to override via YAML front matter, balancing operational governance with per-persona tuning.
+- **Alternatives considered**: Configuration-only metadata (reduced flexibility); file-only metadata (harder to enforce environment-wide defaults).
+
+### Decision: Strict failure on invalid tokens or metadata
+- **Rationale**: Rejects prompts containing unapproved tokens or malformed metadata, falls back to hardcoded defaults, and logs the failure to keep AI safeguards intact.
+- **Alternatives considered**: Lenient stripping of tokens (silent degradation risk); ignoring invalid sections (operators may miss issues).
+
+### Decision: Hot reload emits configuration audit events
+- **Rationale**: When hot reload updates prompt metadata, the system refreshes both content and front matter and emits a `ConfigurationReloaded` event so operators can audit runtime changes.
+- **Alternatives considered**: Body-only reload (developers cannot iterate on metadata); reload without logging (no audit trail for dynamic updates).

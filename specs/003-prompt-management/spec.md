@@ -10,6 +10,9 @@
 ## Clarifications
 
 ### Session 2025-11-17
+- Q: How should hot-reload behave regarding prompt metadata? → A: Full Reload with Logging: Hot-reload applies to both body and front matter, and changes to front matter trigger a `ConfigurationReloaded` log event.
+- Q: What should be the default behavior when an invalid token is found in a prompt? → A: Strict: Reject the prompt and use the fallback if any invalid tokens are found.
+- Q: How should prompt metadata (model, temperature) be managed? → A: Define global defaults in `appsettings.json` and allow individual `.md` prompt files to override them using front matter.
 - Q: What whitelist strategy should govern `{entity.property}` tokens in persona prompts? → A: Persona-specific whitelist configured per persona
 - Q: Which prompt file path and naming convention should override persona prompts? → A: Use `prompts/agents/artspark.{persona}.prompt.md` under the web application
 - Q: Where should production prompt files live to balance governance and agility? → A: Maintain editable prompt files on the production web server’s file system with controlled access
@@ -68,7 +71,7 @@ Site operators need to understand which prompt versions are active in production
 - **Malformed prompt file**: System validates basic structure (detects empty files, encoding issues), logs error, uses fallback.
 - **File system permissions**: If Demo process cannot read `prompts/agents/`, system logs error and uses defaults. Configuration validates path on startup.
 - **Concurrent edits**: File system watches detect changes; system reloads prompts on next request (optional feature for dev/staging).
-- **Token injection attacks**: Template engine validates token names against persona-specific whitelists (configured per persona). Invalid tokens logged and rendered as empty strings.
+- **Token injection attacks**: Template engine validates token names against persona-specific whitelists. If an invalid token is found, the system logs a `TokenValidationFailed` error and falls back to the default hardcoded prompt (Strict mode).
 - **Upstream service failures**: Prompt loading errors do not prevent AI chat from functioning—fallback ensures graceful degradation.
 
 ## Demo Surface & Dependencies *(mandatory)*
@@ -100,18 +103,20 @@ Site operators need to understand which prompt versions are active in production
 - **FR-002**: Agent MUST support file naming convention: `artspark.{persona}.prompt.md` (e.g., `artspark.artwork.prompt.md`, `artspark.curator.prompt.md`, `artspark.artist.prompt.md`, `artspark.historian.prompt.md`)
 - **FR-003**: System MUST replace template tokens in prompt files (format: `{entity.property}`) with actual artwork data at runtime (e.g., `{artwork.Title}`, `{artwork.ArtistDisplay}`)
 - **FR-004**: System MUST validate template tokens against persona-specific whitelists defined in configuration per persona to prevent injection attacks
-- **FR-005**: System MUST fall back to hardcoded default prompts if file loading fails, with logged warnings including file path and error details
+- **FR-005**: System MUST fall back to hardcoded default prompts if file loading or token validation fails, with logged warnings including file path and error details
 - **FR-006**: System MUST log prompt initialization events at startup, including loaded file paths, file sizes, and content hashes (MD5) for audit trails
 - **FR-007**: Prompt loader MUST support optional hot-reload capability for development environments (detect file changes and reload on next request)
 - **FR-008**: Demo MUST continue serving AI chat requests even when prompt files are missing or corrupted (graceful degradation via fallbacks)
 - **FR-009**: Configuration validation MUST check prompt data path existence at startup and log warnings if path is invalid
 - **FR-010**: Agent MUST preserve existing `IPersonaHandler` interface to maintain backward compatibility with Demo and Console consumers
 - **FR-011**: Agent MUST provide a dynamic file-backed `IPersonaHandler` implementation that replaces static `GenerateSystemPrompt` methods when persona prompt files are present
+- **FR-012**: System MUST support global default prompt metadata (e.g., `model`, `temperature`) in configuration, which can be overridden by YAML front matter in individual prompt files.
+- **FR-013**: When hot-reload is enabled, changes to prompt file front matter MUST be reloaded and trigger a `ConfigurationReloaded` log event.
 
 ### Key Entities *(include if feature involves data)*
 
-- **PromptTemplate**: Represents loaded prompt content with metadata (file path, last modified timestamp, content hash, raw markdown text)
-- **PersonaPromptConfiguration**: Maps persona enum values to file names and fallback prompts
+- **PromptTemplate**: Represents loaded prompt content with metadata (file path, last modified timestamp, content hash, raw markdown text, and optional metadata overrides like `model` or `temperature` from front matter).
+- **PersonaPromptConfiguration**: Maps persona enum values to file names, fallback prompts, and a whitelist of allowed template tokens.
 - **TokenReplacementContext**: Holds artwork data and other contextual information for template token substitution
 
 ## AI & Cultural Safeguards *(required when using AI personas or content generation)*
@@ -144,7 +149,7 @@ Site operators need to understand which prompt versions are active in production
   - **Demo.Tests**: Integration test verifying AI chat works with both file-based and fallback prompts
 
 - **Logging & Metrics**: 
-  - Serilog structured events: `PromptLoaded`, `PromptLoadFailed`, `PromptFallbackUsed`, `PromptTokenValidationFailed`
+- Serilog structured events: `PromptLoaded`, `PromptLoadFailed`, `PromptFallbackUsed`, `PromptTokenValidationFailed`, `ConfigurationReloaded`
   - Log properties: `PersonaType`, `FilePath`, `FileSize`, `ContentHash`, `ErrorDetails`
   - Performance metric: Prompt load duration (should be <50ms for file read + parse)
 

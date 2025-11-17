@@ -10,11 +10,12 @@ description: "Implementation tasks for AI Persona Prompt Management System"
 
 ## Phase 1: Setup (Shared Infrastructure)
 
-**Purpose**: Prepare repository structure and configuration required for prompt file loading.
+**Purpose**: Prepare repository structure and baseline configuration for persona prompt files.
 
 - [ ] T001 Restore NuGet packages for `WebSpark.ArtSpark.sln`
 - [ ] T002 Create prompt directory scaffold `WebSpark.ArtSpark.Demo/prompts/agents/`
-- [ ] T003 Verify `ArtSparkAgent:Prompts` section in `WebSpark.ArtSpark.Demo/appsettings.Development.json` includes `DataPath`, `EnableHotReload`, and `FallbackToDefault`
+- [ ] T003 Add `ArtSparkAgent:Prompts` defaults (DataPath, FallbackToDefault, DefaultMetadata) to `WebSpark.ArtSpark.Demo/appsettings.Development.json`
+- [ ] T004 Mirror production-safe prompt settings in `WebSpark.ArtSpark.Demo/appsettings.json`
 
 ---
 
@@ -22,11 +23,12 @@ description: "Implementation tasks for AI Persona Prompt Management System"
 
 **Purpose**: Establish core configuration, options, and DI hooks that all user stories depend on.
 
-- [ ] T004 Implement `PromptOptions` with configuration validation in `WebSpark.ArtSpark.Agent/Configuration/PromptOptions.cs`
-- [ ] T005 [P] Define persona token whitelist map in `WebSpark.ArtSpark.Agent/Configuration/PersonaPromptConfiguration.cs`
-- [ ] T006 Update `WebSpark.ArtSpark.Agent/Extensions/ServiceCollectionExtensions.cs` to expose `AddPromptManagement` registration
-- [ ] T007 Configure prompt options binding and fallback toggles inside `WebSpark.ArtSpark.Demo/Program.cs`
-- [ ] T008 [P] Add configuration validation unit tests in `WebSpark.ArtSpark.Agent.Tests/Configuration/PromptOptionsValidationTests.cs`
+- [ ] T005 Implement prompt options model with metadata defaults in `WebSpark.ArtSpark.Agent/Configuration/PromptOptions.cs`
+- [ ] T006 [P] Define persona prompt configuration map with token whitelist and default metadata in `WebSpark.ArtSpark.Agent/Configuration/PersonaPromptConfiguration.cs`
+- [ ] T007 Update `WebSpark.ArtSpark.Agent/Extensions/ServiceCollectionExtensions.cs` to register prompt options, loader, and decorator services
+- [ ] T008 Configure prompt options binding and fallback toggles in `WebSpark.ArtSpark.Demo/Program.cs`
+- [ ] T009 [P] Add configuration validation tests in `WebSpark.ArtSpark.Agent.Tests/Configuration/PromptOptionsValidationTests.cs`
+- [ ] T010 [P] Document configuration schema in `specs/003-prompt-management/contracts/appsettings.ArtSparkAgent.Prompts.schema.json`
 
 **Checkpoint**: Prompt configuration and DI scaffolding are in place for all personas.
 
@@ -40,17 +42,21 @@ description: "Implementation tasks for AI Persona Prompt Management System"
 
 ### Tests for User Story 1
 
-- [ ] T009 [P] [US1] Add `PromptLoaderTests` covering load, fallback, and token substitution in `WebSpark.ArtSpark.Agent.Tests/Services/PromptLoaderTests.cs`
-- [ ] T010 [P] [US1] Extend `PersonaFactoryTests` to validate file-backed handlers in `WebSpark.ArtSpark.Agent.Tests/Personas/PersonaFactoryTests.cs`
+- [ ] T011 [P] [US1] Add `PromptLoaderTests` covering markdown load, front matter parsing, and strict fallback in `WebSpark.ArtSpark.Agent.Tests/Services/PromptLoaderTests.cs`
+- [ ] T012 [P] [US1] Add metadata merge tests in `WebSpark.ArtSpark.Agent.Tests/Services/PromptLoaderMetadataTests.cs`
+- [ ] T013 [P] [US1] Add token validation tests in `WebSpark.ArtSpark.Agent.Tests/Services/PromptTemplateTokenTests.cs`
+- [ ] T014 [P] [US1] Extend `PersonaFactoryTests` for file-backed handler resolution in `WebSpark.ArtSpark.Agent.Tests/Personas/PersonaFactoryTests.cs`
 
 ### Implementation for User Story 1
 
-- [ ] T011 [US1] Implement file-backed `PromptLoader` service in `WebSpark.ArtSpark.Agent/Services/PromptLoader.cs`
-- [ ] T012 [P] [US1] Create `FileBackedPersonaHandler` decorator in `WebSpark.ArtSpark.Agent/Personas/FileBackedPersonaHandler.cs`
-- [ ] T013 [P] [US1] Update `WebSpark.ArtSpark.Agent/Personas/PersonaFactory.cs` to resolve decorators via `IPromptLoader`
-- [ ] T014 [P] [US1] Expose fallback prompt accessors in `WebSpark.ArtSpark.Agent/Personas/ArtworkPersona.cs`, `ArtistPersona.cs`, `CuratorPersona.cs`, and `HistorianPersona.cs`
-- [ ] T015 [US1] Seed markdown prompt files in `WebSpark.ArtSpark.Demo/prompts/agents/artspark.{artwork|artist|curator|historian}.prompt.md` with required sections
-- [ ] T016 [US1] Register prompt loader integration inside `WebSpark.ArtSpark.Demo/Program.cs` via `AddArtSparkAgent()` pipeline
+- [ ] T015 [US1] Implement `PromptMetadataParser` for YAML front matter in `WebSpark.ArtSpark.Agent/Services/PromptMetadataParser.cs`
+- [ ] T016 [P] [US1] Update `WebSpark.ArtSpark.Agent/Models/PromptTemplate.cs` to store metadata overrides and validation state
+- [ ] T017 [US1] Implement file-backed `PromptLoader` to parse markdown, enforce sections, validate tokens, and merge metadata in `WebSpark.ArtSpark.Agent/Services/PromptLoader.cs`
+- [ ] T018 [P] [US1] Create `FileBackedPersonaHandler` decorator in `WebSpark.ArtSpark.Agent/Personas/FileBackedPersonaHandler.cs`
+- [ ] T019 [P] [US1] Expose fallback prompt accessors in persona classes within `WebSpark.ArtSpark.Agent/Personas/`
+- [ ] T020 [US1] Update `WebSpark.ArtSpark.Agent/Personas/PersonaFactory.cs` to resolve decorators via `IPromptLoader`
+- [ ] T021 [US1] Seed markdown prompt files with YAML front matter in `WebSpark.ArtSpark.Demo/prompts/agents/`
+- [ ] T022 [US1] Register prompt loader pipeline inside `WebSpark.ArtSpark.Demo/Program.cs`
 
 **Checkpoint**: Persona prompts load from files with safe fallback, enabling non-developer updates.
 
@@ -64,14 +70,16 @@ description: "Implementation tasks for AI Persona Prompt Management System"
 
 ### Tests for User Story 2
 
-- [ ] T017 [P] [US2] Add hot reload regression tests in `WebSpark.ArtSpark.Agent.Tests/Services/PromptLoaderHotReloadTests.cs`
+- [ ] T023 [P] [US2] Add hot reload regression tests covering body and metadata reload in `WebSpark.ArtSpark.Agent.Tests/Services/PromptLoaderHotReloadTests.cs`
+- [ ] T024 [P] [US2] Add console harness tests for prompt variants in `WebSpark.ArtSpark.Console.Tests/PromptVariantTests.cs`
 
 ### Implementation for User Story 2
 
-- [ ] T018 [US2] Integrate `PhysicalFileProvider`/`IChangeToken` hot reload logic in `WebSpark.ArtSpark.Agent/Services/PromptLoader.cs`
-- [ ] T019 [P] [US2] Support persona variant filenames in `WebSpark.ArtSpark.Agent/Configuration/PromptOptions.cs`
-- [ ] T020 [US2] Update Console harness configuration in `WebSpark.ArtSpark.Console/Program.cs` to honor `ArtSparkAgent:Prompts` options
-- [ ] T021 [P] [US2] Set development defaults (hot reload true, variants path) in `WebSpark.ArtSpark.Demo/appsettings.Development.json`
+- [ ] T025 [US2] Integrate `PhysicalFileProvider` change tokens into `WebSpark.ArtSpark.Agent/Services/PromptLoader.cs`
+- [ ] T026 [P] [US2] Emit `ConfigurationReloaded` log events when metadata overrides change in `WebSpark.ArtSpark.Agent/Services/PromptLoader.cs`
+- [ ] T027 [P] [US2] Extend prompt options to support variants path in `WebSpark.ArtSpark.Agent/Configuration/PromptOptions.cs`
+- [ ] T028 [US2] Update Console harness configuration in `WebSpark.ArtSpark.Console/Program.cs` to consume prompt options and variant selection
+- [ ] T029 [P] [US2] Set development defaults (`EnableHotReload`, `VariantsPath`) in `WebSpark.ArtSpark.Demo/appsettings.Development.json`
 
 **Checkpoint**: Local developers can iterate on prompts live without rebuilding libraries.
 
@@ -85,14 +93,16 @@ description: "Implementation tasks for AI Persona Prompt Management System"
 
 ### Tests for User Story 3
 
-- [ ] T022 [P] [US3] Add audit logging tests in `WebSpark.ArtSpark.Agent.Tests/Services/PromptAuditLoggingTests.cs`
+- [ ] T030 [P] [US3] Add audit logging tests in `WebSpark.ArtSpark.Agent.Tests/Services/PromptAuditLoggingTests.cs`
+- [ ] T031 [US3] Add Demo integration test verifying file-based, metadata overrides, and fallback prompts in `WebSpark.ArtSpark.Demo/Tests/Integration/PromptFallbackTests.cs`
 
 ### Implementation for User Story 3
 
-- [ ] T023 [US3] Emit structured Serilog events with path, size, and hash in `WebSpark.ArtSpark.Agent/Services/PromptLoader.cs`
-- [ ] T024 [P] [US3] Extend `WebSpark.ArtSpark.Demo/Services/BuildInfoService.cs` to expose prompt metadata
-- [ ] T025 [US3] Render prompt versions in `WebSpark.ArtSpark.Demo/Views/Shared/Components/Footer/Default.cshtml`
-- [ ] T026 [P] [US3] Add fallback warning handling to `WebSpark.ArtSpark.Agent/Services/PromptLoader.cs` to trigger `PromptFallbackUsed`
+- [ ] T032 [US3] Emit structured Serilog events (`PromptLoaded`, `PromptLoadFailed`, `PromptFallbackUsed`, `PromptTokenValidationFailed`, `ConfigurationReloaded`) with metadata in `WebSpark.ArtSpark.Agent/Services/PromptLoader.cs`
+- [ ] T033 [P] [US3] Add fallback warning handling that increments audit counters in `WebSpark.ArtSpark.Agent/Services/PromptLoader.cs`
+- [ ] T034 [P] [US3] Extend `WebSpark.ArtSpark.Demo/Services/BuildInfoService.cs` to surface prompt file hashes, metadata overrides, and fallback status
+- [ ] T035 [US3] Render prompt metadata in `WebSpark.ArtSpark.Demo/Views/Shared/Components/Footer/Default.cshtml`
+- [ ] T036 [P] [US3] Add operator-facing log enrichment in `WebSpark.ArtSpark.Agent/Services/PromptLoader.cs` to include persona type and configuration source
 
 **Checkpoint**: Operators can audit prompt versions and detect fallback conditions in production.
 
@@ -102,11 +112,14 @@ description: "Implementation tasks for AI Persona Prompt Management System"
 
 **Purpose**: Finalize documentation, validation, and regression coverage across the feature.
 
-- [ ] T027 Update authoring guidance in `docs/copilot/prompt-authoring-guide.md`
-- [ ] T028 [P] Document prompt management usage in `WebSpark.ArtSpark.Agent/README.md`
-- [ ] T029 [P] Refresh configuration instructions in `README.md`
-- [ ] T030 Run full test suite `dotnet test WebSpark.ArtSpark.Tests`
-- [ ] T031 [P] Verify quickstart steps and hot reload workflow in `specs/003-prompt-management/quickstart.md`
+- [ ] T037 Update authoring guidance in `docs/copilot/prompt-authoring-guide.md`
+- [ ] T038 [P] Coordinate review of `docs/copilot/prompt-authoring-guide.md` with content stakeholders
+- [ ] T039 [P] Document prompt management usage in `WebSpark.ArtSpark.Agent/README.md`
+- [ ] T040 [P] Refresh configuration instructions in `README.md`
+- [ ] T041 Update `docs/AI-Chat-Personas-Implementation.md` with prompt management architecture changes
+- [ ] T042 Run full test suite `dotnet test WebSpark.ArtSpark.Tests`
+- [ ] T043 [P] Verify quickstart steps and hot reload workflow in `specs/003-prompt-management/quickstart.md`
+- [ ] T044 Capture prompt load performance metrics (<50ms) via Serilog log review or benchmark script
 
 ---
 
@@ -119,9 +132,9 @@ description: "Implementation tasks for AI Persona Prompt Management System"
 
 ## Parallel Execution Opportunities
 
-- Tasks marked `[P]` operate on distinct files and can run concurrently once their phase is unlocked.
-- After Phase 2, teams can tackle US1, US2, and US3 in parallel with clear ownership of Agent vs. Demo vs. Console changes.
-- Testing tasks marked `[P]` can execute simultaneously across different test classes to speed validation.
+- `[P]` tasks operate on different files or test suites; run concurrently once dependencies are satisfied.
+- After Phase 2 completes, parallelize user stories by team: US1 (Agent + Demo), US2 (Agent + Console), US3 (Agent + Demo UI/Services).
+- Documentation tasks `[P]` in Phase 6 can progress alongside final verification once implementation stabilizes.
 
 ## Implementation Strategy
 
