@@ -11,12 +11,32 @@
 pwsh -Command "dotnet restore WebSpark.ArtSpark.sln"
 ```
 
-## 2. Run the Quality Audit Script (prototype)
+## 2. Run the Quality Audit Script
 ```powershell
 pwsh -File scripts/audit/run-quality-audit.ps1
 ```
 - Produces Markdown output under `docs/copilot/<ISO-DATE>/quality-audit.md`
-- Fails fast if another audit execution is in progress
+- Generates prioritized backlog in `docs/copilot/<ISO-DATE>/quality-audit-backlog.md`
+
+### Backlog Filtering Options
+```powershell
+# Filter by severity and limit items
+pwsh -File scripts/audit/run-quality-audit.ps1 -Severity Warning -MaxItems 10
+
+# Skip specific audit phases
+pwsh -File scripts/audit/run-quality-audit.ps1 -SkipBuild -SkipDependencies
+
+# Generate backlog for errors only
+pwsh -File scripts/audit/run-quality-audit.ps1 -Severity Error
+```
+
+**Parameters**:
+- `-Severity`: Filter backlog items (All, Error, Warning, Info) - default: All
+- `-MaxItems`: Limit backlog size (0 = unlimited) - default: 0
+- `-SkipBuild`: Skip build diagnostics collection
+- `-SkipDependencies`: Skip dependency currency checks
+- `-SkipSafeguards`: Skip safeguard audits
+- `-OutputDirectory`: Custom output path for reports
 
 ## 3. Inspect the Markdown Report
 - Section **Build Diagnostics** lists errors/warnings/analyzers grouped by project

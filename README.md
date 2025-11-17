@@ -689,15 +689,38 @@ The solution is ready for Azure App Service deployment with the following recomm
 
 Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
+### Quality Audit
+
+This solution includes an automated quality audit system to maintain build health and dependency currency:
+
+```powershell
+# Run full quality audit
+pwsh -File scripts/audit/run-quality-audit.ps1
+
+# Generate filtered backlog
+pwsh -File scripts/audit/run-quality-audit.ps1 -Severity Warning -MaxItems 10
+```
+
+**Audit Reports**: Generated under `docs/copilot/YYYY-MM-DD/quality-audit.md`
+
+The audit checks:
+- ✅ Build diagnostics (compiler warnings/errors)
+- ✅ NuGet package currency
+- ✅ npm package currency (if package.json exists)
+- ✅ AI safeguard compliance (persona definitions, moderation hooks)
+
+See [`specs/001-quality-audit/quickstart.md`](specs/001-quality-audit/quickstart.md) for detailed usage.
+
 ### Development Setup
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
 3. Make your changes
 4. Add tests if applicable
-5. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-6. Push to the branch (`git push origin feature/AmazingFeature`)
-7. Open a Pull Request
+5. Run quality audit to verify changes
+6. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+7. Push to the branch (`git push origin feature/AmazingFeature`)
+8. Open a Pull Request
 
 ### Acknowledgments
 
