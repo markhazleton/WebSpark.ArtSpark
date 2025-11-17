@@ -9,7 +9,7 @@ namespace WebSpark.ArtSpark.Agent.Services;
 public sealed class PromptMetadataParser
 {
     private static readonly Regex FrontMatterRegex = new(
-        @"^---\s*\n(.*?)\n---\s*\n",
+        @"^---\s*\n(.*?)\n?---\s*\n",
         RegexOptions.Singleline | RegexOptions.Compiled
     );
 
