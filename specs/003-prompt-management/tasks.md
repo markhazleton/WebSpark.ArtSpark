@@ -28,9 +28,11 @@ description: "Implementation tasks for AI Persona Prompt Management System"
 - [ ] T007 Update `WebSpark.ArtSpark.Agent/Extensions/ServiceCollectionExtensions.cs` to register prompt options, loader, and decorator services
 - [ ] T008 Configure prompt options binding and fallback toggles in `WebSpark.ArtSpark.Demo/Program.cs`
 - [ ] T009 [P] Add configuration validation tests in `WebSpark.ArtSpark.Tests/Agent/Configuration/PromptOptionsValidationTests.cs`
+- [ ] T010a [P] Implement prompt data path validation at startup with warning logs when directory is missing or unreadable
+- [ ] T010b [P] Add prompt path validation coverage in `PromptOptionsValidationTests.cs`
 - [ ] T010 [P] Document configuration schema in `specs/003-prompt-management/contracts/appsettings.ArtSparkAgent.Prompts.schema.json`
 
-**Checkpoint**: Prompt configuration and DI scaffolding are in place for all personas.
+**Checkpoint**: Prompt configuration, startup path validation, and DI scaffolding are in place for all personas.
 
 ---
 
