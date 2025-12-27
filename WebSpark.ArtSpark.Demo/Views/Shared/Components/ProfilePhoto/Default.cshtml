@@ -1,0 +1,22 @@
+@model WebSpark.ArtSpark.Demo.ViewComponents.ProfilePhotoViewModel
+
+@{
+    var sizeStyle = $"width: {Model.Size}px; height: {Model.Size}px;";
+    var fontSize = Model.Size / 2.5;
+    var cssClasses = $"rounded-circle profile-photo-icon {Model.CssClass}";
+}
+
+@if (!string.IsNullOrEmpty(Model.PhotoUrl))
+{
+    <img src="@Model.PhotoUrl" 
+         alt="@Model.DisplayName profile photo" 
+         class="@cssClasses" 
+         style="@sizeStyle object-fit: cover;" />
+}
+else
+{
+    <div class="@cssClasses bg-secondary d-inline-flex align-items-center justify-content-center" 
+         style="@sizeStyle color: white; font-size: @(fontSize)px; font-weight: 500;">
+        @Model.Initial
+    </div>
+}

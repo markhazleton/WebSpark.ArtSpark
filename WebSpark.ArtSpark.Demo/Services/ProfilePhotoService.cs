@@ -37,9 +37,13 @@ public class ProfilePhotoService : IProfilePhotoService
     {
         try
         {
+            _logger.LogInformation("Starting profile photo upload for user {UserId}. Upload path: {UploadPath}", userId, _uploadPath);
+            
             // Validate file
             if (!await ValidatePhotoAsync(file))
             {
+                _logger.LogWarning("Profile photo validation failed for user {UserId}. File: {FileName}, Size: {Size}, Type: {ContentType}", 
+                    userId, file.FileName, file.Length, file.ContentType);
                 return new ProfilePhotoUploadResult
                 {
                     Success = false,
@@ -47,14 +51,22 @@ public class ProfilePhotoService : IProfilePhotoService
                 };
             }
 
-            // Generate unique filename
+            _logger.LogInformation("Validation passed for user {UserId}. File: {FileName}, Size: {Size}, Type: {ContentType}", 
+                userId, file.FileName, file.Length, file.ContentType);
+
+            // Generate unique filename - use .jpg as default since most images will be saved as JPEG
             var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
-            var safeFileName = $"{userId}_{Guid.NewGuid()}{fileExtension}";
+            var baseFileName = $"{userId}_{Guid.NewGuid()}";
+            var safeFileName = $"{baseFileName}{fileExtension}";
             var originalPath = Path.Combine(_uploadPath, safeFileName);
+
+            _logger.LogInformation("Generated filename: {FileName}, Full path: {Path}", safeFileName, originalPath);
 
             // Load and process image
             using var stream = file.OpenReadStream();
             using var image = await ImageSharpImage.LoadAsync(stream, cancellationToken);
+
+            _logger.LogInformation("Image loaded successfully. Dimensions: {Width}x{Height}", image.Width, image.Height);
 
             // Auto-orient based on EXIF data
             image.Mutate(x => x.AutoOrient());
@@ -64,22 +76,43 @@ public class ProfilePhotoService : IProfilePhotoService
             image.Metadata.IptcProfile = null;
             image.Metadata.XmpProfile = null;
 
-            // Save original (optimized)
-            await SaveOptimizedImageAsync(image, originalPath, file.ContentType, cancellationToken);
+            _logger.LogInformation("About to save original image to: {Path}", originalPath);
 
-            // Generate thumbnails
-            var thumbnail64 = await GenerateThumbnailAsync(image, 64, safeFileName, file.ContentType, cancellationToken);
-            var thumbnail128 = await GenerateThumbnailAsync(image, 128, safeFileName, file.ContentType, cancellationToken);
-            var thumbnail256 = await GenerateThumbnailAsync(image, 256, safeFileName, file.ContentType, cancellationToken);
+            // Save original (optimized) and get actual saved filename
+            var savedOriginalName = await SaveOptimizedImageAsync(image, originalPath, file.ContentType, cancellationToken);
+
+            _logger.LogInformation("Original image saved as: {FileName}", savedOriginalName);
+
+            // Generate thumbnails using the base filename
+            _logger.LogInformation("Generating thumbnail 64x64");
+            var thumbnail64 = await GenerateThumbnailAsync(image, 64, baseFileName, file.ContentType, cancellationToken);
+            
+            _logger.LogInformation("Generating thumbnail 128x128");
+            var thumbnail128 = await GenerateThumbnailAsync(image, 128, baseFileName, file.ContentType, cancellationToken);
+            
+            _logger.LogInformation("Generating thumbnail 256x256");
+            var thumbnail256 = await GenerateThumbnailAsync(image, 256, baseFileName, file.ContentType, cancellationToken);
 
             _logger.LogInformation(
-                "Profile photo uploaded successfully for user {UserId}. File: {FileName}, Size: {FileSize} bytes",
-                userId, safeFileName, file.Length);
+                "Profile photo uploaded successfully for user {UserId}. Original: {FileName}, Thumbnails: {T64}, {T128}, {T256}",
+                userId, savedOriginalName, thumbnail64, thumbnail128, thumbnail256);
+
+            // Verify files exist
+            var originalFullPath = Path.Combine(_uploadPath, savedOriginalName);
+            var thumb64Path = Path.Combine(_uploadPath, thumbnail64);
+            var thumb128Path = Path.Combine(_uploadPath, thumbnail128);
+            var thumb256Path = Path.Combine(_uploadPath, thumbnail256);
+
+            _logger.LogInformation("Verifying files exist:");
+            _logger.LogInformation("  Original: {Path} - Exists: {Exists}", originalFullPath, File.Exists(originalFullPath));
+            _logger.LogInformation("  Thumb64: {Path} - Exists: {Exists}", thumb64Path, File.Exists(thumb64Path));
+            _logger.LogInformation("  Thumb128: {Path} - Exists: {Exists}", thumb128Path, File.Exists(thumb128Path));
+            _logger.LogInformation("  Thumb256: {Path} - Exists: {Exists}", thumb256Path, File.Exists(thumb256Path));
 
             return new ProfilePhotoUploadResult
             {
                 Success = true,
-                FileName = safeFileName,
+                FileName = savedOriginalName,
                 Thumbnail64 = thumbnail64,
                 Thumbnail128 = thumbnail128,
                 Thumbnail256 = thumbnail256
@@ -87,7 +120,8 @@ public class ProfilePhotoService : IProfilePhotoService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error uploading profile photo for user {UserId}", userId);
+            _logger.LogError(ex, "Error uploading profile photo for user {UserId}. Exception: {Message}, StackTrace: {StackTrace}", 
+                userId, ex.Message, ex.StackTrace);
             return new ProfilePhotoUploadResult
             {
                 Success = false,
@@ -162,14 +196,25 @@ public class ProfilePhotoService : IProfilePhotoService
     private async Task<string> GenerateThumbnailAsync(
         ImageSharpImage sourceImage,
         int size,
-        string originalFileName,
+        string baseFileName,
         string contentType,
         CancellationToken cancellationToken)
     {
-        var baseName = Path.GetFileNameWithoutExtension(originalFileName);
-        var extension = Path.GetExtension(originalFileName);
-        var thumbnailFileName = $"{baseName}_{size}x{size}{extension}";
+        _logger.LogInformation("GenerateThumbnailAsync called. Size: {Size}, BaseFileName: {BaseFileName}, ContentType: {ContentType}", 
+            size, baseFileName, contentType);
+        
+        // Determine extension based on content type
+        var extension = contentType.ToLowerInvariant() switch
+        {
+            "image/webp" => ".webp",
+            "image/png" => ".png",
+            _ => ".jpg"
+        };
+        
+        var thumbnailFileName = $"{baseFileName}_{size}x{size}{extension}";
         var thumbnailPath = Path.Combine(_uploadPath, thumbnailFileName);
+
+        _logger.LogInformation("Creating thumbnail at: {Path}", thumbnailPath);
 
         using var thumbnail = sourceImage.Clone(x => x.Resize(new ResizeOptions
         {
@@ -178,30 +223,66 @@ public class ProfilePhotoService : IProfilePhotoService
             Position = AnchorPositionMode.Center
         }));
 
-        await SaveOptimizedImageAsync(thumbnail, thumbnailPath, contentType, cancellationToken);
-        return thumbnailFileName;
+        _logger.LogInformation("Thumbnail image cloned and resized to {Size}x{Size}", size, size);
+
+        var savedFileName = await SaveOptimizedImageAsync(thumbnail, thumbnailPath, contentType, cancellationToken);
+        
+        _logger.LogInformation("Thumbnail saved as: {FileName}", savedFileName);
+        
+        return savedFileName;
     }
 
-    private async Task SaveOptimizedImageAsync(
+    private async Task<string> SaveOptimizedImageAsync(
         ImageSharpImage image,
         string path,
         string contentType,
         CancellationToken cancellationToken)
     {
+        _logger.LogInformation("SaveOptimizedImageAsync called. Path: {Path}, ContentType: {ContentType}", path, contentType);
+        
         if (contentType.Equals("image/webp", StringComparison.OrdinalIgnoreCase))
         {
+            _logger.LogInformation("Saving as WebP: {Path}", path);
             await image.SaveAsync(path, new WebpEncoder { Quality = 90 }, cancellationToken);
+            var exists = File.Exists(path);
+            _logger.LogInformation("WebP saved. File exists: {Exists}, Size: {Size}", exists, exists ? new FileInfo(path).Length : 0);
+            return Path.GetFileName(path);
         }
-        else if (contentType.Equals("image/png", StringComparison.OrdinalIgnoreCase) && new FileInfo(path).Length > 1048576)
+        else if (contentType.Equals("image/png", StringComparison.OrdinalIgnoreCase))
         {
-            // Convert large PNGs to JPEG
-            var jpegPath = Path.ChangeExtension(path, ".jpg");
-            await image.SaveAsync(jpegPath, new JpegEncoder { Quality = 85 }, cancellationToken);
+            _logger.LogInformation("Saving as PNG: {Path}", path);
+            // Save as PNG first
+            await image.SaveAsync(path, cancellationToken);
+            
+            var exists = File.Exists(path);
+            var fileInfo = new FileInfo(path);
+            _logger.LogInformation("PNG saved. File exists: {Exists}, Size: {Size}", exists, exists ? fileInfo.Length : 0);
+            
+            // Check if file is too large and convert to JPEG if needed
+            if (fileInfo.Exists && fileInfo.Length > 1048576)
+            {
+                _logger.LogInformation("PNG is large ({Size} bytes), converting to JPEG", fileInfo.Length);
+                var jpegPath = Path.ChangeExtension(path, ".jpg");
+                await image.SaveAsync(jpegPath, new JpegEncoder { Quality = 85 }, cancellationToken);
+                _logger.LogInformation("JPEG saved: {Path}, Size: {Size}", jpegPath, new FileInfo(jpegPath).Length);
+                // Delete the original PNG
+                File.Delete(path);
+                _logger.LogInformation("Original PNG deleted: {Path}", path);
+                return Path.GetFileName(jpegPath);
+            }
+            return Path.GetFileName(path);
         }
         else
         {
-            // Default to JPEG with 85% quality
-            await image.SaveAsync(path, new JpegEncoder { Quality = 85 }, cancellationToken);
+            _logger.LogInformation("Converting to JPEG: {Path}", path);
+            // Default to JPEG with 85% quality for all other formats
+            // Force .jpg extension
+            var jpegPath = Path.ChangeExtension(path, ".jpg");
+            await image.SaveAsync(jpegPath, new JpegEncoder { Quality = 85 }, cancellationToken);
+            var exists = File.Exists(jpegPath);
+            _logger.LogInformation("JPEG saved: {Path}, File exists: {Exists}, Size: {Size}", 
+                jpegPath, exists, exists ? new FileInfo(jpegPath).Length : 0);
+            return Path.GetFileName(jpegPath);
         }
     }
 }
