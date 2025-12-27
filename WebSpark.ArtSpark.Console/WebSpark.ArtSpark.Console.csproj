@@ -24,6 +24,7 @@
     <PackageReference Include="WebSpark.HttpClientUtility" Version="2.1.2" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\WebSpark.ArtSpark.Agent\WebSpark.ArtSpark.Agent.csproj" />
     <ProjectReference Include="..\WebSpark.ArtSpark.Client\WebSpark.ArtSpark.Client.csproj" />
   </ItemGroup>
 </Project>
