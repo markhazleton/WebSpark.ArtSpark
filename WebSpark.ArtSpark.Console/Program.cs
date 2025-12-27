@@ -47,6 +47,28 @@ var configuration = new ConfigurationBuilder()
 
 services.AddSingleton<IConfiguration>(configuration);
 
+// Configure prompt management options for Console testing
+services.Configure<WebSpark.ArtSpark.Agent.Configuration.PromptOptions>(
+    configuration.GetSection("ArtSparkAgent:Prompts"));
+
+// Console can output prompt configuration for verification
+var promptConfig = configuration.GetSection("ArtSparkAgent:Prompts");
+var dataPath = promptConfig.GetValue<string>("DataPath");
+var enableHotReload = promptConfig.GetValue<bool>("EnableHotReload");
+var variantsPath = promptConfig.GetValue<string?>("VariantsPath");
+
+if (!string.IsNullOrEmpty(dataPath))
+{
+    System.Console.WriteLine($"Prompt Configuration:");
+    System.Console.WriteLine($"  Data Path: {dataPath}");
+    System.Console.WriteLine($"  Hot Reload: {enableHotReload}");
+    if (!string.IsNullOrEmpty(variantsPath))
+    {
+        System.Console.WriteLine($"  Variants Path: {variantsPath}");
+    }
+    System.Console.WriteLine();
+}
+
 // Build the service provider
 var serviceProvider = services.BuildServiceProvider();
 

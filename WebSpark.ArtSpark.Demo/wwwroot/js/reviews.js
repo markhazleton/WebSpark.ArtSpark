@@ -129,34 +129,41 @@ function displayReviews(reviews) {
         return;
     }
 
-    const reviewsHtml = reviews.map(review => `
-        <div class="card mb-3 border-0 bg-body-secondary">
-            <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                    <div>
-                        <h6 class="card-title mb-1">
-                            <i class="bi bi-person-circle me-1"></i>${escapeHtml(review.userName)}
-                        </h6>
-                        <div class="text-warning mb-1">
-                            ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
+    const reviewsHtml = reviews.map(review => {
+        const profilePhoto = review.userPhotoUrl 
+            ? `<img src="${review.userPhotoUrl}" alt="${escapeHtml(review.userName)} profile photo" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover; border: 1px solid rgba(0,0,0,0.1);" />`
+            : `<div class="rounded-circle bg-secondary d-inline-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; color: white; font-size: 14px; font-weight: 500; border: 1px solid rgba(0,0,0,0.1);">${review.userInitial}</div>`;
+        
+        return `
+            <div class="card mb-3 border-0 bg-body-secondary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div class="d-flex align-items-start">
+                            ${profilePhoto}
+                            <div>
+                                <h6 class="card-title mb-1">${escapeHtml(review.userName)}</h6>
+                                <div class="text-warning mb-1">
+                                    ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted">${review.createdAt}</small>
+                            ${review.isOwner ? `
+                                <button class="btn btn-sm btn-outline-danger ms-2" 
+                                        onclick="deleteReview(${review.id})">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            ` : ''}
                         </div>
                     </div>
-                    <div class="text-end">
-                        <small class="text-muted">${review.createdAt}</small>
-                        ${review.isOwner ? `
-                            <button class="btn btn-sm btn-outline-danger ms-2" 
-                                    onclick="deleteReview(${review.id})">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        ` : ''}
-                    </div>
+                    ${review.reviewText ? `
+                        <p class="card-text ms-5 ps-2">${escapeHtml(review.reviewText)}</p>
+                    ` : ''}
                 </div>
-                ${review.reviewText ? `
-                    <p class="card-text">${escapeHtml(review.reviewText)}</p>
-                ` : ''}
             </div>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 
     container.innerHTML = reviewsHtml;
 }

@@ -150,9 +150,11 @@
                                 data-bs-toggle="dropdown" aria-expanded="false" aria-label="Navigation menu">
                                 @if (User.Identity!.IsAuthenticated)
                                 {
-                                    <i class="bi bi-person-circle me-1"></i>
-                                    <span class="d-none d-sm-inline">@User.Identity.Name</span>
-                                    <span class="d-sm-none">Menu</span>
+                                    <div class="d-flex align-items-center gap-2">
+                                        @await Component.InvokeAsync("ProfilePhoto", new { size = 24, cssClass = "me-1" })
+                                        <span class="d-none d-sm-inline">@User.Identity.Name</span>
+                                        <span class="d-sm-none">Menu</span>
+                                    </div>
                                 }
                                 else
                                 {
@@ -165,10 +167,13 @@
                                 {
                                     <!-- Authenticated User Options -->
                                     <li>
-                                        <h6 class="dropdown-header"><i class="bi bi-person me-2"></i>Account</h6>
+                                        <h6 class="dropdown-header d-flex align-items-center">
+                                            @await Component.InvokeAsync("ProfilePhoto", new { size = 20, cssClass = "me-2" })
+                                            Account
+                                        </h6>
                                     </li>
-                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile"><i
-                                                class="bi bi-person me-2"></i>Profile</a></li>
+                                    <li><a class="dropdown-item d-flex align-items-center" asp-controller="Account" asp-action="Profile">
+                                        <i class="bi bi-person me-2"></i>Profile</a></li>
                                     <li><a class="dropdown-item" asp-controller="Account" asp-action="Favorites"><i
                                                 class="bi bi-heart me-2"></i>My Favorites</a>
                                     </li>

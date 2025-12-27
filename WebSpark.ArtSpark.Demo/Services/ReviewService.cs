@@ -221,6 +221,7 @@ public class CollectionService : ICollectionService
     public async Task<IEnumerable<UserCollection>> GetUserCollectionsAsync(string userId)
     {
         return await _context.Collections
+            .Include(c => c.Artworks)
             .Where(c => c.UserId == userId)
             .OrderByDescending(c => c.CreatedAt)
             .ToListAsync();

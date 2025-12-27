@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.FileProviders;
 using WebSpark.ArtSpark.Agent.Extensions;
 using WebSpark.ArtSpark.Client.Clients;
 using WebSpark.ArtSpark.Client.Interfaces;
@@ -58,6 +59,19 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 })
 .AddEntityFrameworkStores<ArtSparkDbContext>()
 .AddDefaultTokenProviders();
+
+// Configure application cookie for authentication
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Account/Login";
+    options.LogoutPath = "/Account/Logout";
+    options.AccessDeniedPath = "/Account/AccessDenied";
+    options.ExpireTimeSpan = TimeSpan.FromDays(14);
+    options.SlidingExpiration = true;
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Lax;
+});
 
 // Configure options from appsettings
 builder.Services.Configure<FileUploadOptions>(builder.Configuration.GetSection(FileUploadOptions.SectionName));
@@ -159,6 +173,47 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+// Configure static file serving for uploads
+var fileUploadOptions = app.Services.GetRequiredService<Microsoft.Extensions.Options.IOptions<FileUploadOptions>>().Value;
+
+// Setup profile photo uploads
+var profileUploadsPath = Path.GetFullPath(fileUploadOptions.ProfilePhotoPath);
+if (!Directory.Exists(profileUploadsPath))
+{
+    Directory.CreateDirectory(profileUploadsPath);
+    app.Logger.LogInformation("Created profile photo upload directory at {Path}", profileUploadsPath);
+}
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(profileUploadsPath),
+    RequestPath = "/uploads/profiles",
+    OnPrepareResponse = ctx =>
+    {
+        // Cache profile photos for 7 days
+        ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=604800");
+    }
+});
+
+// Setup collection media uploads
+var collectionMediaPath = Path.GetFullPath(fileUploadOptions.CollectionMediaPath);
+if (!Directory.Exists(collectionMediaPath))
+{
+    Directory.CreateDirectory(collectionMediaPath);
+    app.Logger.LogInformation("Created collection media upload directory at {Path}", collectionMediaPath);
+}
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(collectionMediaPath),
+    RequestPath = "/uploads/collections",
+    OnPrepareResponse = ctx =>
+    {
+        // Cache collection media for 7 days
+        ctx.Context.Response.Headers.Append("Cache-Control", "public,max-age=604800");
+    }
+});
 
 // Configure WebSpark.Bootswatch (includes static files and style cache)
 app.UseBootswatchAll();

@@ -141,6 +141,12 @@ public class AccountController : Controller
         return RedirectToAction("Index", "Home");
     }
 
+    [HttpGet]
+    public IActionResult AccessDenied()
+    {
+        return View();
+    }
+
     private IActionResult RedirectToLocal(string? returnUrl)
     {
         if (Url.IsLocalUrl(returnUrl))
@@ -223,15 +229,15 @@ public class AccountController : Controller
         }
         else if (model.NewProfilePhoto != null)
         {
+            // Delete old photo BEFORE uploading new one (if exists)
+            if (!string.IsNullOrEmpty(user.ProfilePhotoFileName))
+            {
+                await _profilePhotoService.DeletePhotoAsync(user.Id);
+            }
+
             var photoResult = await _profilePhotoService.UploadPhotoAsync(model.NewProfilePhoto, user.Id);
             if (photoResult.Success)
             {
-                // Delete old photo if exists
-                if (!string.IsNullOrEmpty(user.ProfilePhotoFileName))
-                {
-                    await _profilePhotoService.DeletePhotoAsync(user.Id);
-                }
-
                 user.ProfilePhotoFileName = photoResult.FileName;
                 user.ProfilePhotoThumbnail64 = photoResult.Thumbnail64;
                 user.ProfilePhotoThumbnail128 = photoResult.Thumbnail128;

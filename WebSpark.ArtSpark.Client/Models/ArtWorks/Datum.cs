@@ -3,98 +3,98 @@
     public class Datum
     {
         public int id { get; set; }
-        public string api_model { get; set; }
-        public string api_link { get; set; }
+        public string? api_model { get; set; }
+        public string? api_link { get; set; }
         public bool is_boosted { get; set; }
-        public string title { get; set; }
-        public object alt_titles { get; set; }
-        public Thumbnail thumbnail { get; set; }
-        public string main_reference_number { get; set; }
+        public string? title { get; set; }
+        public object? alt_titles { get; set; }
+        public Thumbnail? thumbnail { get; set; }
+        public string? main_reference_number { get; set; }
         public bool has_not_been_viewed_much { get; set; }
-        public object boost_rank { get; set; }
+        public object? boost_rank { get; set; }
         public int date_start { get; set; }
         public int date_end { get; set; }
-        public string date_display { get; set; }
-        public string date_qualifier_title { get; set; }
+        public string? date_display { get; set; }
+        public string? date_qualifier_title { get; set; }
         public int? date_qualifier_id { get; set; }
-        public string artist_display { get; set; }
-        public string place_of_origin { get; set; }
-        public string dimensions { get; set; }
-        public string medium_display { get; set; }
-        public string inscriptions { get; set; }
-        public string credit_line { get; set; }
-        public string catalogue_display { get; set; }
-        public string publication_history { get; set; }
-        public string exhibition_history { get; set; }
-        public string provenance_text { get; set; }
-        public string publishing_verification_level { get; set; }
+        public string? artist_display { get; set; }
+        public string? place_of_origin { get; set; }
+        public string? dimensions { get; set; }
+        public string? medium_display { get; set; }
+        public string? inscriptions { get; set; }
+        public string? credit_line { get; set; }
+        public string? catalogue_display { get; set; }
+        public string? publication_history { get; set; }
+        public string? exhibition_history { get; set; }
+        public string? provenance_text { get; set; }
+        public string? publishing_verification_level { get; set; }
         public int internal_department_id { get; set; }
         public int? fiscal_year { get; set; }
-        public object fiscal_year_deaccession { get; set; }
+        public object? fiscal_year_deaccession { get; set; }
         public bool is_public_domain { get; set; }
         public bool is_zoomable { get; set; }
         public int max_zoom_window_size { get; set; }
-        public string copyright_notice { get; set; }
+        public string? copyright_notice { get; set; }
         public bool has_multimedia_resources { get; set; }
         public bool has_educational_resources { get; set; }
         public bool has_advanced_imaging { get; set; }
         public float colorfulness { get; set; }
-        public Color color { get; set; }
+        public Color? color { get; set; }
         public float? latitude { get; set; }
         public float? longitude { get; set; }
-        public string latlon { get; set; }
+        public string? latlon { get; set; }
         public bool is_on_view { get; set; }
-        public string on_loan_display { get; set; }
-        public object gallery_title { get; set; }
-        public object gallery_id { get; set; }
-        public string artwork_type_title { get; set; }
+        public string? on_loan_display { get; set; }
+        public object? gallery_title { get; set; }
+        public object? gallery_id { get; set; }
+        public string? artwork_type_title { get; set; }
         public int artwork_type_id { get; set; }
-        public string department_title { get; set; }
-        public string department_id { get; set; }
+        public string? department_title { get; set; }
+        public string? department_id { get; set; }
         public int artist_id { get; set; }
-        public string artist_title { get; set; }
-        public object[] alt_artist_ids { get; set; }
-        public int[] artist_ids { get; set; }
-        public string[] artist_titles { get; set; }
-        public string[] category_ids { get; set; }
-        public string[] category_titles { get; set; }
-        public string[] term_titles { get; set; }
-        public string style_id { get; set; }
-        public string style_title { get; set; }
-        public object[] alt_style_ids { get; set; }
-        public string[] style_ids { get; set; }
-        public string[] style_titles { get; set; }
-        public string classification_id { get; set; }
-        public string classification_title { get; set; }
-        public string[] alt_classification_ids { get; set; }
-        public string[] classification_ids { get; set; }
-        public string[] classification_titles { get; set; }
-        public string subject_id { get; set; }
-        public string[] alt_subject_ids { get; set; }
-        public string[] subject_ids { get; set; }
-        public string[] subject_titles { get; set; }
-        public string material_id { get; set; }
-        public string[] alt_material_ids { get; set; }
-        public string[] material_ids { get; set; }
-        public string[] material_titles { get; set; }
-        public string technique_id { get; set; }
-        public string[] alt_technique_ids { get; set; }
-        public string[] technique_ids { get; set; }
-        public string[] technique_titles { get; set; }
-        public string[] theme_titles { get; set; }
-        public string image_id { get; set; }
-        public string[] alt_image_ids { get; set; }
-        public string[] document_ids { get; set; }
-        public string[] sound_ids { get; set; }
-        public object[] video_ids { get; set; }
-        public object[] text_ids { get; set; }
-        public long?[] section_ids { get; set; }
-        public string[] section_titles { get; set; }
-        public object[] site_ids { get; set; }
-        public Suggest_Autocomplete_All[] suggest_autocomplete_all { get; set; }
+        public string? artist_title { get; set; }
+        public object[]? alt_artist_ids { get; set; }
+        public int[]? artist_ids { get; set; }
+        public string[]? artist_titles { get; set; }
+        public string[]? category_ids { get; set; }
+        public string[]? category_titles { get; set; }
+        public string[]? term_titles { get; set; }
+        public string? style_id { get; set; }
+        public string? style_title { get; set; }
+        public object[]? alt_style_ids { get; set; }
+        public string[]? style_ids { get; set; }
+        public string[]? style_titles { get; set; }
+        public string? classification_id { get; set; }
+        public string? classification_title { get; set; }
+        public string[]? alt_classification_ids { get; set; }
+        public string[]? classification_ids { get; set; }
+        public string[]? classification_titles { get; set; }
+        public string? subject_id { get; set; }
+        public string[]? alt_subject_ids { get; set; }
+        public string[]? subject_ids { get; set; }
+        public string[]? subject_titles { get; set; }
+        public string? material_id { get; set; }
+        public string[]? alt_material_ids { get; set; }
+        public string[]? material_ids { get; set; }
+        public string[]? material_titles { get; set; }
+        public string? technique_id { get; set; }
+        public string[]? alt_technique_ids { get; set; }
+        public string[]? technique_ids { get; set; }
+        public string[]? technique_titles { get; set; }
+        public string[]? theme_titles { get; set; }
+        public string? image_id { get; set; }
+        public string[]? alt_image_ids { get; set; }
+        public string[]? document_ids { get; set; }
+        public string[]? sound_ids { get; set; }
+        public object[]? video_ids { get; set; }
+        public object[]? text_ids { get; set; }
+        public long?[]? section_ids { get; set; }
+        public string[]? section_titles { get; set; }
+        public object[]? site_ids { get; set; }
+        public Suggest_Autocomplete_All[]? suggest_autocomplete_all { get; set; }
         public DateTime source_updated_at { get; set; }
         public DateTime updated_at { get; set; }
         public DateTime timestamp { get; set; }
-        public string suggest_autocomplete_boosted { get; set; }
+        public string? suggest_autocomplete_boosted { get; set; }
     }
 }

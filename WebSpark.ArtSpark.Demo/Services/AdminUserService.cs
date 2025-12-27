@@ -13,6 +13,8 @@ public interface IAdminUserService
     Task<bool> RemoveRoleAsync(string userId, string roleName, string adminUserId, CancellationToken cancellationToken = default);
     Task<bool> ToggleLockoutAsync(string userId, bool lockout, string adminUserId, CancellationToken cancellationToken = default);
     Task<int> GetTotalUsersCountAsync(string? searchTerm = null, CancellationToken cancellationToken = default);
+    Task<List<AdminUserCollectionDto>> GetUserCollectionsAsync(string userId, CancellationToken cancellationToken = default);
+    Task<bool> MoveCollectionAsync(int collectionId, string fromUserId, string toUserId, string adminUserId, CancellationToken cancellationToken = default);
 }
 
 public class AdminUserService : IAdminUserService
@@ -128,7 +130,18 @@ public class AdminUserService : IAdminUserService
             ReviewsCount = user.Reviews.Count,
             FavoritesCount = user.Favorites.Count,
             LockoutEnd = user.LockoutEnd,
-            RecentAuditLogs = auditLogs
+            RecentAuditLogs = auditLogs,
+            Collections = user.Collections.Select(c => new AdminUserCollectionDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+                IsPublic = c.IsPublic,
+                CreatedAt = c.CreatedAt,
+                ArtworkCount = c.Artworks.Count,
+                ViewCount = c.ViewCount,
+                IsFeatured = c.IsFeatured
+            }).ToList()
         };
     }
 
@@ -268,6 +281,72 @@ public class AdminUserService : IAdminUserService
             return false;
         }
     }
+
+    public async Task<List<AdminUserCollectionDto>> GetUserCollectionsAsync(string userId, CancellationToken cancellationToken = default)
+    {
+        return await _context.Collections
+            .AsNoTracking()
+            .Where(c => c.UserId == userId)
+            .OrderByDescending(c => c.CreatedAt)
+            .Select(c => new AdminUserCollectionDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+                IsPublic = c.IsPublic,
+                CreatedAt = c.CreatedAt,
+                ArtworkCount = c.Artworks.Count,
+                ViewCount = c.ViewCount,
+                IsFeatured = c.IsFeatured
+            })
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<bool> MoveCollectionAsync(int collectionId, string fromUserId, string toUserId, string adminUserId, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var collection = await _context.Collections
+                .FirstOrDefaultAsync(c => c.Id == collectionId && c.UserId == fromUserId, cancellationToken);
+
+            if (collection == null)
+            {
+                _logger.LogWarning("Collection {CollectionId} not found or does not belong to user {FromUserId}", collectionId, fromUserId);
+                return false;
+            }
+
+            var targetUser = await _userManager.FindByIdAsync(toUserId);
+            if (targetUser == null)
+            {
+                _logger.LogWarning("Target user {ToUserId} not found", toUserId);
+                return false;
+            }
+
+            var oldUserId = collection.UserId;
+            collection.UserId = toUserId;
+            collection.UpdatedAt = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync(cancellationToken);
+
+            await _auditLogService.LogActionAsync(
+                "CollectionMoved",
+                adminUserId,
+                null,
+                new { CollectionId = collectionId, CollectionName = collection.Name, FromUserId = oldUserId, ToUserId = toUserId });
+
+            _logger.LogInformation(
+                "Collection {CollectionId} moved from user {FromUserId} to user {ToUserId} by admin {AdminId}",
+                collectionId, oldUserId, toUserId, adminUserId);
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error moving collection {CollectionId} from user {FromUserId} to user {ToUserId}",
+                collectionId, fromUserId, toUserId);
+            return false;
+        }
+    }
 }
 
 public class UserSummaryDto
@@ -289,4 +368,17 @@ public class UserDetailDto : UserSummaryDto
     public int ReviewsCount { get; set; }
     public int FavoritesCount { get; set; }
     public List<AuditLog> RecentAuditLogs { get; set; } = new();
+    public List<AdminUserCollectionDto> Collections { get; set; } = new();
+}
+
+public class AdminUserCollectionDto
+{
+    public int Id { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public bool IsPublic { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public int ArtworkCount { get; set; }
+    public int ViewCount { get; set; }
+    public bool IsFeatured { get; set; }
 }

@@ -39,7 +39,11 @@ namespace WebSpark.ArtSpark.Agent.Extensions
             if (configureOptions != null)
             {
                 services.Configure(configureOptions);
-            }            // Register HTTP client for API calls and required HttpClientUtility services
+            }
+
+            // Register prompt management configuration and services
+            services.Configure<PromptOptions>(configuration.GetSection("ArtSparkAgent:Prompts"));
+            services.AddSingleton<IPromptLoader, PromptLoader>();            // Register HTTP client for API calls and required HttpClientUtility services
             services.AddHttpClient();
             services.AddSingleton<IStringConverter, SystemJsonStringConverter>();
             services.AddScoped<IHttpClientService, HttpClientService>();

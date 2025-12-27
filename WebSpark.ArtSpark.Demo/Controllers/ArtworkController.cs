@@ -22,6 +22,7 @@ public class ArtworkController : Controller
     private readonly IReviewService _reviewService;
     private readonly ICollectionService _collectionService;
     private readonly IFavoriteService _favoriteService;
+    private readonly IProfilePhotoService _profilePhotoService;
 
     public ArtworkController(
         IArtInstituteClient artInstituteClient,
@@ -29,7 +30,8 @@ public class ArtworkController : Controller
         ILogger<ArtworkController> logger,
         IReviewService reviewService,
         IFavoriteService favoriteService,
-        ICollectionService collectionService)
+        ICollectionService collectionService,
+        IProfilePhotoService profilePhotoService)
     {
         _artInstituteClient = artInstituteClient ?? throw new ArgumentNullException(nameof(artInstituteClient));
         _chatAgent = chatAgent ?? throw new ArgumentNullException(nameof(chatAgent));
@@ -37,6 +39,7 @@ public class ArtworkController : Controller
         _reviewService = reviewService ?? throw new ArgumentNullException(nameof(reviewService));
         _favoriteService = favoriteService ?? throw new ArgumentNullException(nameof(favoriteService));
         _collectionService = collectionService ?? throw new ArgumentNullException(nameof(collectionService));
+        _profilePhotoService = profilePhotoService ?? throw new ArgumentNullException(nameof(profilePhotoService));
     }
 
     /// <summary>
@@ -221,6 +224,8 @@ public class ArtworkController : Controller
                 {
                     id = r.Id,
                     userName = r.User.DisplayName,
+                    userPhotoUrl = _profilePhotoService.GetPhotoUrl(r.User.ProfilePhotoThumbnail64),
+                    userInitial = r.User.DisplayName.FirstOrDefault().ToString().ToUpper(),
                     rating = r.Rating,
                     reviewText = r.ReviewText,
                     createdAt = r.CreatedAt.ToString("MMM dd, yyyy"),

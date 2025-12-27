@@ -29,6 +29,8 @@ WebSpark.ArtSpark.Agent transforms static artwork data into dynamic, conversatio
 - **🎯 Cultural Sensitivity**: Respectful handling of cultural artifacts and contexts
 - **⚡ High Performance**: Optimized for real-time conversational experiences
 - **🔧 Configurable**: Flexible settings for different use cases and environments
+- **📝 Externalized Prompts**: Edit AI persona prompts without code changes (new in v1.1)
+- **🔥 Hot Reload**: Live prompt updates in development without restarts (new in v1.1)
 
 ## 🏗️ Architecture
 
@@ -41,6 +43,7 @@ The library is built on a modular architecture with the following key components
 - `IChatMemory`: Conversation persistence
 - `IPersonaFactory`: Persona creation and management
 - `IPersonaHandler`: Individual persona implementations
+- `IPromptLoader`: Prompt file loading and hot reload (new in v1.1)
 
 ### AI Personas
 
@@ -124,6 +127,17 @@ var app = builder.Build();
       "TopP": 0.9,
       "RequestTimeout": "00:02:00",
       "MaxRetries": 3
+    },
+    "Prompts": {
+      "DataPath": "./prompts/agents",
+      "EnableHotReload": false,
+      "FallbackToDefault": true,
+      "DefaultMetadata": {
+        "ModelId": "gpt-4o",
+        "Temperature": 0.7,
+        "TopP": 0.9,
+        "MaxOutputTokens": 1000
+      }
     },
     "ArtInstitute": {
       "BaseUrl": "https://api.artic.edu/api/v1",
@@ -215,7 +229,113 @@ console.log(response.message);
 console.log("Suggested questions:", response.suggestedQuestions);
 ```
 
-## 🔧 Advanced Configuration
+## � Prompt Management (New in v1.1)
+
+### Overview
+
+Content editors can now modify AI persona prompts without touching code! Prompts are stored as markdown files with YAML front matter for configuration.
+
+### Prompt File Location
+
+Create prompt files in your configured `DataPath` (default: `./prompts/agents/`):
+
+```
+prompts/agents/
+├── artspark.artwork.prompt.md
+├── artspark.artist.prompt.md
+├── artspark.curator.prompt.md
+└── artspark.historian.prompt.md
+```
+
+### Prompt File Format
+
+```markdown
+---
+model: gpt-4o
+temperature: 0.7
+top_p: 0.9
+max_output_tokens: 1000
+---
+
+## CULTURAL SENSITIVITY
+
+Instructions for handling cultural context and sensitive topics...
+
+## CONVERSATION GUIDELINES
+
+Instructions for tone, style, and response format...
+```
+
+### Configuration Options
+
+| Setting | Type | Default | Description |
+|---------|------|---------|-------------|
+| `DataPath` | string | `./prompts/agents` | Directory containing prompt files |
+| `EnableHotReload` | bool | `false` | Reload prompts on file changes (dev only) |
+| `FallbackToDefault` | bool | `true` | Use hardcoded prompts if file fails |
+| `DefaultMetadata` | object | See above | Default OpenAI parameters |
+
+### Hot Reload in Development
+
+Enable live prompt editing without restarts:
+
+```json
+{
+  "ArtSparkAgent": {
+    "Prompts": {
+      "DataPath": "./prompts/agents",
+      "EnableHotReload": true,
+      "FallbackToDefault": true
+    }
+  }
+}
+```
+
+**How it works**:
+1. Edit prompt file and save
+2. File watcher detects change (~500ms)
+3. Cache invalidated automatically
+4. Next AI request uses updated prompt
+
+### Token Replacement
+
+Use tokens like `{artwork.Title}` to personalize prompts with artwork data:
+
+```markdown
+You are discussing **{artwork.Title}** by {artwork.ArtistDisplay}.
+```
+
+**Available tokens per persona**:
+- **Artwork**: 10 tokens (Title, ArtistDisplay, DateDisplay, PlaceOfOrigin, Medium, Dimensions, Description, CulturalContext, StyleTitle, Classification)
+- **Artist**: 6 tokens (Title, ArtistDisplay, DateDisplay, PlaceOfOrigin, StyleTitle, Classification)
+- **Curator**: 6 tokens (same as Artist)
+- **Historian**: 7 tokens (Title, DateDisplay, PlaceOfOrigin, CulturalContext, StyleTitle, Classification, Description)
+
+**Security**: Token validation prevents injection attacks. Only whitelisted tokens are allowed.
+
+### Monitoring
+
+Structured Serilog events for operational insight:
+- `PromptLoaded`: Successful load with file hash and size
+- `PromptLoadFailed`: Error details for troubleshooting
+- `PromptFallbackUsed`: When hardcoded defaults activate
+- `PromptTokenValidationFailed`: Invalid token detection
+- `ConfigurationReloaded`: Hot reload cache invalidation
+
+### Prompt Authoring Guide
+
+For detailed prompt authoring instructions, see:  
+📖 **[Prompt Authoring Guide](../../docs/copilot/prompt-authoring-guide.md)**
+
+Topics covered:
+- File structure and naming conventions
+- YAML front matter reference
+- Token replacement syntax
+- Validation checklist
+- Common errors and solutions
+- Deployment workflow
+
+## �🔧 Advanced Configuration
 
 ### Custom Data Provider
 

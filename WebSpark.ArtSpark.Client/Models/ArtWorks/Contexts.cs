@@ -2,6 +2,6 @@
 {
     public class Contexts
     {
-        public string[] groupings { get; set; }
+        public string[]? groupings { get; set; }
     }
 }

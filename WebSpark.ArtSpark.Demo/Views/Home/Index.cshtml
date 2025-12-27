@@ -14,6 +14,47 @@
             transition: transform 0.3s ease;
             box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
         }
+
+        /* Persona Carousel Styling */
+        #personaCarousel .carousel-control-prev,
+        #personaCarousel .carousel-control-next {
+            width: 5%;
+        }
+
+        #personaCarousel .carousel-control-prev-icon,
+        #personaCarousel .carousel-control-next-icon {
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            padding: 1rem;
+        }
+
+        #personaCarousel .carousel-indicators button {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        #personaCarousel .carousel-indicators button.active {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        #personaCarousel .carousel-item {
+            transition: transform 0.6s ease-in-out;
+        }
+
+        /* Badge styling for persona features */
+        .badge {
+            font-weight: 500;
+            padding: 0.375rem 0.75rem;
+        }
+
+        /* Quick navigation buttons */
+        .ai-chat-section button[data-bs-slide-to] {
+            transition: all 0.3s ease;
+        }
+
+        .ai-chat-section button[data-bs-slide-to]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15);
+        }
     </style>
 }
 
@@ -69,8 +110,9 @@
         </div> <!-- Collection Artworks -->
         @if (Model.EnrichedArtworks.Any())
         {
+            var displayArtworks = Model.EnrichedArtworks.OrderBy(x => Guid.NewGuid()).Take(4).ToList();
             <div class="row g-3">
-                @foreach (var artwork in Model.EnrichedArtworks)
+                @foreach (var artwork in displayArtworks)
                 {
                     <div class="col-6 col-md-4 col-lg-3">
                         <div class="card border-0 shadow-sm card-hover h-100">
@@ -114,12 +156,15 @@
                 }
             </div>
             <div class="text-center mt-4">
+                <p class="text-body-secondary small mb-3">
+                    Showing 4 of @Model.ArtworkCount artworks from this collection
+                </p>
                 <div class="d-flex gap-2 justify-content-center flex-wrap">
                     <a href="/collection/@Model.Collection.Slug" class="btn btn-primary">
-                        <i class="bi bi-arrow-right me-1"></i>View Collection
+                        <i class="bi bi-collection me-1"></i>View Full Collection
                     </a>
                     <a href="/explore/collections" class="btn btn-outline-primary">
-                        <i class="bi bi-grid-3x3-gap me-1"></i>More Collections
+                        <i class="bi bi-grid-3x3-gap me-1"></i>Explore More Collections
                     </a>
                 </div>
             </div>
@@ -149,44 +194,161 @@
                     <h2 class="h4 fw-bold text-body-emphasis mb-2">
                         <i class="bi bi-robot me-2"></i>AI Chat Personas
                     </h2>
-                    <p class="text-body-secondary small">Chat with artworks through AI</p>
+                    <p class="text-body-secondary small">Chat with artworks through AI - each persona offers a unique perspective</p>
                 </div>
 
-                <div class="row g-3">
-                    <div class="col-6 col-md-3">
-                        <div class="card text-center border-0 shadow-sm">
-                            <div class="card-body py-3">
-                                <i class="bi bi-image display-5 text-primary mb-2"></i>
-                                <h6 class="card-title mb-0">Artwork</h6>
+                <!-- Bootstrap Carousel for Personas -->
+                <div id="personaCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <!-- Carousel Indicators -->
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#personaCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Artwork Persona"></button>
+                        <button type="button" data-bs-target="#personaCarousel" data-bs-slide-to="1" aria-label="Artist Persona"></button>
+                        <button type="button" data-bs-target="#personaCarousel" data-bs-slide-to="2" aria-label="Curator Persona"></button>
+                        <button type="button" data-bs-target="#personaCarousel" data-bs-slide-to="3" aria-label="Historian Persona"></button>
+                    </div>
+
+                    <!-- Carousel Inner -->
+                    <div class="carousel-inner">
+                        <!-- Artwork Persona -->
+                        <div class="carousel-item active">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body p-4">
+                                    <div class="text-center mb-3">
+                                        <i class="bi bi-image display-3 text-primary"></i>
+                                    </div>
+                                    <h3 class="h5 text-center fw-bold text-primary mb-3">Artwork Persona</h3>
+                                    <p class="text-body-secondary mb-3">
+                                        <strong>The artwork speaks in first person as the physical object itself.</strong>
+                                    </p>
+                                    <p class="text-body-secondary small mb-2">
+                                        Experience a unique conversation where the artwork has consciousness and personality shaped by its cultural origins. 
+                                        It remembers its creation, ceremonial purpose, and journey to the museum. The artwork shares stories about 
+                                        its cultural significance while expressing complex feelings about being displayed in a Western institution.
+                                    </p>
+                                    <div class="mt-3">
+                                        <span class="badge bg-primary-subtle text-primary me-2">First-Person Voice</span>
+                                        <span class="badge bg-primary-subtle text-primary me-2">Cultural Heritage</span>
+                                        <span class="badge bg-primary-subtle text-primary">Emotional Engagement</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Artist Persona -->
+                        <div class="carousel-item">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body p-4">
+                                    <div class="text-center mb-3">
+                                        <i class="bi bi-palette display-3 text-success"></i>
+                                    </div>
+                                    <h3 class="h5 text-center fw-bold text-success mb-3">Artist Persona</h3>
+                                    <p class="text-body-secondary mb-3">
+                                        <strong>The artist speaks as the creator, sharing their vision and craft.</strong>
+                                    </p>
+                                    <p class="text-body-secondary small mb-2">
+                                        Gain insight from the artist's perspective. Learn about traditional artistic practices passed down through 
+                                        generations, understand the deep spiritual and cultural significance of the work, and discover the technical 
+                                        mastery behind each piece. The artist shares their pride in cultural authenticity while addressing concerns 
+                                        about preservation and interpretation.
+                                    </p>
+                                    <div class="mt-3">
+                                        <span class="badge bg-success-subtle text-success me-2">Cultural Traditions</span>
+                                        <span class="badge bg-success-subtle text-success me-2">Artistic Technique</span>
+                                        <span class="badge bg-success-subtle text-success">Creator's Vision</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Curator Persona -->
+                        <div class="carousel-item">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body p-4">
+                                    <div class="text-center mb-3">
+                                        <i class="bi bi-mortarboard display-3 text-warning"></i>
+                                    </div>
+                                    <h3 class="h5 text-center fw-bold text-warning mb-3">Curator Persona</h3>
+                                    <p class="text-body-secondary mb-3">
+                                        <strong>A museum curator with expertise in art history and cultural preservation.</strong>
+                                    </p>
+                                    <p class="text-body-secondary small mb-2">
+                                        Explore artworks through the lens of museum scholarship. The curator provides extensive knowledge of 
+                                        artistic traditions, provenance, and display ethics. Learn about the artwork's relationship to broader 
+                                        cultural movements while considering contemporary debates about cultural representation, appropriation, 
+                                        and repatriation in museums.
+                                    </p>
+                                    <div class="mt-3">
+                                        <span class="badge bg-warning-subtle text-warning me-2">Museum Studies</span>
+                                        <span class="badge bg-warning-subtle text-warning me-2">Cultural Context</span>
+                                        <span class="badge bg-warning-subtle text-warning">Scholarly Insight</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Historian Persona -->
+                        <div class="carousel-item">
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body p-4">
+                                    <div class="text-center mb-3">
+                                        <i class="bi bi-book display-3 text-info"></i>
+                                    </div>
+                                    <h3 class="h5 text-center fw-bold text-info mb-3">Historian Persona</h3>
+                                    <p class="text-body-secondary mb-3">
+                                        <strong>A cultural historian specializing in historical periods and contexts.</strong>
+                                    </p>
+                                    <p class="text-body-secondary small mb-2">
+                                        Understand the artwork as a product of its historical moment. The historian provides deep knowledge of 
+                                        social, political, and cultural contexts, discussing contemporary events that shaped artistic expression. 
+                                        Learn about trade routes, cultural exchange, and the impact of colonialism on cultural objects while 
+                                        connecting past and present meanings.
+                                    </p>
+                                    <div class="mt-3">
+                                        <span class="badge bg-info-subtle text-info me-2">Historical Context</span>
+                                        <span class="badge bg-info-subtle text-info me-2">Cultural Exchange</span>
+                                        <span class="badge bg-info-subtle text-info">Period Analysis</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-6 col-md-3">
-                        <div class="card text-center border-0 shadow-sm">
-                            <div class="card-body py-3">
-                                <i class="bi bi-palette display-5 text-success mb-2"></i>
-                                <h6 class="card-title mb-0">Artist</h6>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Carousel Controls -->
+                    <button class="carousel-control-prev" type="button" data-bs-target="#personaCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#personaCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
 
+                <!-- Quick Summary Cards Below Carousel -->
+                <div class="row g-2 mt-3">
                     <div class="col-6 col-md-3">
-                        <div class="card text-center border-0 shadow-sm">
-                            <div class="card-body py-3">
-                                <i class="bi bi-mortarboard display-5 text-warning mb-2"></i>
-                                <h6 class="card-title mb-0">Curator</h6>
-                            </div>
-                        </div>
+                        <button class="btn btn-outline-primary w-100 py-2" data-bs-target="#personaCarousel" data-bs-slide-to="0">
+                            <i class="bi bi-image d-block mb-1"></i>
+                            <small>Artwork</small>
+                        </button>
                     </div>
-
                     <div class="col-6 col-md-3">
-                        <div class="card text-center border-0 shadow-sm">
-                            <div class="card-body py-3">
-                                <i class="bi bi-book display-5 text-info mb-2"></i>
-                                <h6 class="card-title mb-0">Historian</h6>
-                            </div>
-                        </div>
+                        <button class="btn btn-outline-success w-100 py-2" data-bs-target="#personaCarousel" data-bs-slide-to="1">
+                            <i class="bi bi-palette d-block mb-1"></i>
+                            <small>Artist</small>
+                        </button>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <button class="btn btn-outline-warning w-100 py-2" data-bs-target="#personaCarousel" data-bs-slide-to="2">
+                            <i class="bi bi-mortarboard d-block mb-1"></i>
+                            <small>Curator</small>
+                        </button>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <button class="btn btn-outline-info w-100 py-2" data-bs-target="#personaCarousel" data-bs-slide-to="3">
+                            <i class="bi bi-book d-block mb-1"></i>
+                            <small>Historian</small>
+                        </button>
                     </div>
                 </div>
             </div>

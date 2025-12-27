@@ -78,6 +78,78 @@ public enum ChatPersona
 }
 ```
 
+### Prompt Management System (New!)
+
+The AI persona system now features an externalized prompt management system that enables content authors to refine AI behavior without code changes:
+
+#### File-Based Prompt Loading
+
+```csharp
+public interface IPromptLoader
+{
+    Task<PromptTemplate> GetPromptAsync(ChatPersona persona, CancellationToken cancellationToken = default);
+}
+
+public class PromptTemplate
+{
+    public string Content { get; set; }
+    public PromptMetadata? Metadata { get; set; }
+    public bool IsFallback { get; set; }
+    public string? FilePath { get; set; }
+}
+```
+
+#### Prompt File Structure
+
+Persona prompts are stored as markdown files in `prompts/agents/` with YAML front matter:
+
+```markdown
+---
+model: gpt-4o
+temperature: 0.8
+max_output_tokens: 2000
+---
+
+# Artwork Persona System Prompt
+
+## CULTURAL SENSITIVITY
+[Cultural sensitivity guidelines]
+
+## CONVERSATION GUIDELINES
+[Conversation rules and behavior]
+
+## RESPONSE FORMATTING
+[How to format responses]
+```
+
+#### Configuration
+
+```json
+{
+  "ArtSparkAgent": {
+    "Prompts": {
+      "DataPath": "./prompts/agents",
+      "EnableHotReload": false,
+      "FallbackToDefault": true,
+      "DefaultMetadata": {
+        "ModelId": "gpt-4o",
+        "Temperature": 0.7
+      }
+    }
+  }
+}
+```
+
+#### Key Features
+
+- **📝 Content Author Control**: Non-developers can refine personas by editing markdown files
+- **🔄 Hot Reload (Dev Mode)**: Changes to prompts reload automatically during development
+- **🛡️ Safe Fallback**: Invalid prompts automatically fall back to hardcoded defaults
+- **🔍 Token Validation**: Strict whitelist prevents injection attacks
+- **📊 Audit Logging**: Structured logs track prompt versions and fallback usage
+- **⚙️ Metadata Overrides**: Individual prompts can override model settings (temperature, etc.)
+- **🎯 Operator Visibility**: Footer displays active prompt hashes and fallback status
+
 ### Chat Request/Response Models
 
 ```csharp

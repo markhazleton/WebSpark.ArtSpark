@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using WebSpark.ArtSpark.Demo.Models;
+using WebSpark.ArtSpark.Demo.Options;
 using WebSpark.ArtSpark.Demo.Services;
 
 namespace WebSpark.ArtSpark.Demo.Controllers;
@@ -12,7 +14,7 @@ public class MediaController : Controller
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly ICollectionService _collectionService;
     private readonly ILogger<MediaController> _logger;
-    private readonly IWebHostEnvironment _environment;
+    private readonly FileUploadOptions _fileUploadOptions;
     private const long MaxFileSize = 10 * 1024 * 1024; // 10MB
     private readonly string[] AllowedExtensions = { ".jpg", ".jpeg", ".png", ".gif", ".webp", ".mp4", ".mov", ".avi", ".pdf", ".doc", ".docx" };
     private readonly string[] AllowedMimeTypes = {
@@ -25,12 +27,12 @@ public class MediaController : Controller
         UserManager<ApplicationUser> userManager,
         ICollectionService collectionService,
         ILogger<MediaController> logger,
-        IWebHostEnvironment environment)
+        IOptions<FileUploadOptions> fileUploadOptions)
     {
         _userManager = userManager;
         _collectionService = collectionService;
         _logger = logger;
-        _environment = environment;
+        _fileUploadOptions = fileUploadOptions.Value;
     }
 
     /// <summary>
@@ -72,8 +74,8 @@ public class MediaController : Controller
             var fileName = $"{Guid.NewGuid()}{fileExtension}";
             var originalFileName = file.FileName;
 
-            // Create uploads directory if it doesn't exist
-            var uploadsPath = Path.Combine(_environment.WebRootPath, "uploads", "collections", collectionId.ToString());
+            // Create uploads directory using configured path
+            var uploadsPath = Path.Combine(Path.GetFullPath(_fileUploadOptions.CollectionMediaPath), collectionId.ToString());
             Directory.CreateDirectory(uploadsPath);
 
             // Save file
@@ -104,6 +106,9 @@ public class MediaController : Controller
 
             var media = await _collectionService.AddMediaAsync(collectionId, userId, mediaItem.MediaUrl, mediaItem.MediaType, mediaItem.Title, mediaItem.Description);
             var mediaId = media.Id;
+
+            _logger.LogInformation("Media uploaded successfully for collection {CollectionId}. File: {FileName}, Size: {FileSize} bytes",
+                collectionId, fileName, file.Length);
 
             return Json(new
             {
