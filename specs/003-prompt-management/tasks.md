@@ -73,14 +73,14 @@ description: "Implementation tasks for AI Persona Prompt Management System"
 ### Tests for User Story 2
 
 - [X] T023 [P] [US2] Add hot reload regression tests covering body and metadata reload in `WebSpark.ArtSpark.Tests/Agent/Services/PromptLoaderHotReloadTests.cs`
-- [ ] T024 [P] [US2] Add console harness tests for prompt variants in `WebSpark.ArtSpark.Tests/Console/PromptVariantTests.cs`
+- [X] T024 [P] [US2] Add console harness tests for prompt variants in `WebSpark.ArtSpark.Tests/Console/PromptVariantTests.cs`
 
 ### Implementation for User Story 2
 
 - [X] T025 [US2] Integrate `PhysicalFileProvider` change tokens into `WebSpark.ArtSpark.Agent/Services/PromptLoader.cs`
 - [X] T026 [P] [US2] Emit `ConfigurationReloaded` log events when metadata overrides change in `WebSpark.ArtSpark.Agent/Services/PromptLoader.cs`
 - [X] T027 [P] [US2] Extend prompt options to support variants path in `WebSpark.ArtSpark.Agent/Configuration/PromptOptions.cs`
-- [ ] T028 [US2] Update Console harness configuration in `WebSpark.ArtSpark.Console/Program.cs` to consume prompt options and variant selection
+- [X] T028 [US2] Update Console harness configuration in `WebSpark.ArtSpark.Console/Program.cs` to consume prompt options and variant selection
 - [X] T029 [P] [US2] Set development defaults (`EnableHotReload`, `VariantsPath`) in `WebSpark.ArtSpark.Demo/appsettings.Development.json`
 
 **Checkpoint**: Local developers can iterate on prompts live without rebuilding libraries.
@@ -95,15 +95,15 @@ description: "Implementation tasks for AI Persona Prompt Management System"
 
 ### Tests for User Story 3
 
-- [ ] T030 [P] [US3] Add audit logging tests in `WebSpark.ArtSpark.Tests/Agent/Services/PromptAuditLoggingTests.cs`
-- [ ] T031 [US3] Add Demo integration test verifying file-based, metadata overrides, and fallback prompts in `WebSpark.ArtSpark.Tests/Demo/PromptFallbackTests.cs`
+- [X] T030 [P] [US3] Add audit logging tests in `WebSpark.ArtSpark.Tests/Agent/Services/PromptAuditLoggingTests.cs`
+- [X] T031 [US3] Add Demo integration test verifying file-based, metadata overrides, and fallback prompts in `WebSpark.ArtSpark.Tests/Demo/PromptFallbackTests.cs`
 
 ### Implementation for User Story 3
 
 - [X] T032 [US3] Emit structured Serilog events (`PromptLoaded`, `PromptLoadFailed`, `PromptFallbackUsed`, `PromptTokenValidationFailed`, `ConfigurationReloaded`) with metadata in `WebSpark.ArtSpark.Agent/Services/PromptLoader.cs`
 - [X] T033 [P] [US3] Add fallback warning handling that increments audit counters in `WebSpark.ArtSpark.Agent/Services/PromptLoader.cs`
-- [ ] T034 [P] [US3] Extend `WebSpark.ArtSpark.Demo/Services/BuildInfoService.cs` to surface prompt file hashes, metadata overrides, and fallback status
-- [ ] T035 [US3] Render prompt metadata in `WebSpark.ArtSpark.Demo/Views/Shared/Components/Footer/Default.cshtml`
+- [X] T034 [P] [US3] Extend `WebSpark.ArtSpark.Demo/Services/BuildInfoService.cs` to surface prompt file hashes, metadata overrides, and fallback status
+- [X] T035 [US3] Render prompt metadata in `WebSpark.ArtSpark.Demo/Views/Shared/Components/Footer/Default.cshtml`
 - [X] T036 [P] [US3] Add operator-facing log enrichment in `WebSpark.ArtSpark.Agent/Services/PromptLoader.cs` to include persona type and configuration source
 
 **Checkpoint**: Operators can audit prompt versions and detect fallback conditions in production.
@@ -115,14 +115,14 @@ description: "Implementation tasks for AI Persona Prompt Management System"
 **Purpose**: Finalize documentation, validation, and regression coverage across the feature.
 
 - [X] T037 Update authoring guidance in `docs/copilot/prompt-authoring-guide.md`
-- [ ] T038 [P] Coordinate review of `docs/copilot/prompt-authoring-guide.md` with content stakeholders
+- [X] T038 [P] Coordinate review of `docs/copilot/prompt-authoring-guide.md` with content stakeholders
 - [X] T039 [P] Document prompt management usage in `WebSpark.ArtSpark.Agent/README.md`
 - [X] T040 [P] Refresh configuration instructions in `README.md`
-- [ ] T041 Update `docs/AI-Chat-Personas-Implementation.md` with prompt management architecture changes
+- [X] T041 Update `docs/AI-Chat-Personas-Implementation.md` with prompt management architecture changes
 - [X] T042 Run full test suite `dotnet test WebSpark.ArtSpark.Tests`
-- [ ] T043 [P] Verify quickstart steps and hot reload workflow in `specs/003-prompt-management/quickstart.md`
-- [ ] T044 Capture prompt load performance metrics (<50ms) via Serilog log review or benchmark script
-- [ ] T045 Draft release-note entry summarizing externalized prompts, metadata overrides, and logging enhancements
+- [X] T043 [P] Verify quickstart steps and hot reload workflow in `specs/003-prompt-management/quickstart.md`
+- [X] T044 Capture prompt load performance metrics (<50ms) via Serilog log review or benchmark script
+- [X] T045 Draft release-note entry summarizing externalized prompts, metadata overrides, and logging enhancements
 
 ---
 

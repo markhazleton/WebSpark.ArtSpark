@@ -10,6 +10,66 @@
                 <small class="text-body-secondary">
                     @Model.FormattedBuildInfo
                 </small>
+                @if (Model.PromptMetadata != null && Model.PromptMetadata.TotalPrompts > 0)
+                {
+                    <div class="mt-2">
+                        <small class="text-body-secondary">
+                            <i class="bi bi-chat-dots me-1"></i>
+                            AI Prompts: @Model.PromptMetadata.TotalPrompts loaded
+                            @if (Model.PromptMetadata.HasFallbacks)
+                            {
+                                <span class="text-warning" title="Some prompts using fallback">
+                                    <i class="bi bi-exclamation-triangle"></i>
+                                    (@Model.PromptMetadata.FallbackCount fallback)
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-success">
+                                    <i class="bi bi-check-circle"></i>
+                                </span>
+                            }
+                        </small>
+                        <details class="mt-1">
+                            <summary class="text-body-secondary" style="cursor: pointer; font-size: 0.875rem;">
+                                <i class="bi bi-info-circle me-1"></i>Prompt Details
+                            </summary>
+                            <div class="mt-2 ms-3" style="font-size: 0.75rem;">
+                                @foreach (var persona in Model.PromptMetadata.Personas.Values)
+                                {
+                                    <div class="mb-1 text-body-secondary">
+                                        <strong>@persona.PersonaName:</strong>
+                                        @if (persona.IsFallback)
+                                        {
+                                            <span class="text-warning">
+                                                <i class="bi bi-arrow-counterclockwise"></i> Fallback
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-success">
+                                                <i class="bi bi-file-earmark-text"></i> File-based
+                                            </span>
+                                            @if (!string.IsNullOrEmpty(persona.ContentHash))
+                                            {
+                                                <span class="font-monospace">(@persona.ContentHash.Substring(0, 8)...)</span>
+                                            }
+                                        }
+                                        @if (!string.IsNullOrEmpty(persona.ModelId))
+                                        {
+                                            <br />
+                                            <span class="ms-2">Model: @persona.ModelId</span>
+                                            @if (persona.Temperature.HasValue)
+                                            {
+                                                <span>, Temp: @persona.Temperature.Value.ToString("F2")</span>
+                                            }
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </details>
+                    </div>
+                }
             </div>
             <div class="col-md-4 col-12 text-center text-md-center text-sm-start">
                 <a href="https://MarkHazleton.com" target="_blank" 
