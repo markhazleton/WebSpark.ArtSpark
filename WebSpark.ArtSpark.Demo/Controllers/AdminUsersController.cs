@@ -127,4 +127,33 @@ public class AdminUsersController : Controller
 
         return RedirectToAction(nameof(Details), new { id = userId });
     }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> MoveCollection(int collectionId, string fromUserId, string toUserId)
+    {
+        var adminUserId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(adminUserId))
+        {
+            return Unauthorized();
+        }
+
+        if (string.IsNullOrEmpty(toUserId))
+        {
+            TempData["ErrorMessage"] = "Target user ID is required.";
+            return RedirectToAction(nameof(Details), new { id = fromUserId });
+        }
+
+        var result = await _adminUserService.MoveCollectionAsync(collectionId, fromUserId, toUserId, adminUserId);
+        if (result)
+        {
+            TempData["SuccessMessage"] = "Collection moved successfully.";
+        }
+        else
+        {
+            TempData["ErrorMessage"] = "Failed to move collection. Please verify the collection and target user exist.";
+        }
+
+        return RedirectToAction(nameof(Details), new { id = fromUserId });
+    }
 }
