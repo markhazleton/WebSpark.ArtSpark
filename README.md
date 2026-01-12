@@ -2,7 +2,7 @@
 
 **A comprehensive .NET solution for the Art Institute of Chicago's public API, featuring a complete client library, revolutionary AI chat system with multiple personas, and demo applications showcasing modern .NET development practices.**
 
-[![.NET](https://img.shields.io/badge/.NET-9.0-purple.svg)](https://dotnet.microsoft.com/download)
+[![.NET](https://img.shields.io/badge/.NET-10.0-purple.svg)](https://dotnet.microsoft.com/download)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 🚀 **[Live Demo: https://artspark.markhazleton.com](https://artspark.markhazleton.com)**
@@ -44,7 +44,7 @@ This solution provides a complete .NET ecosystem for interacting with the Art In
 - ✅ **IIIF Support**: Built-in IIIF URL construction for high-quality images
 - ✅ **Flexible Querying**: Pagination, field selection, and resource inclusion
 - ✅ **Error Handling**: Graceful error handling and HTTP status management
-- ✅ **Modern .NET**: Uses .NET 9.0 with minimal external dependencies
+- ✅ **Modern .NET**: Uses .NET 10.0 with minimal external dependencies
 
 ### 🎭 Revolutionary AI Features
 
@@ -455,7 +455,7 @@ Experience the interactive chat feature in our [live demo application](https://a
 
 ### Core Technologies
 
-- **.NET 9.0**: Latest .NET features and performance improvements
+- **.NET 10.0**: Latest .NET features and performance improvements
 - **ASP.NET Core Identity**: User authentication and authorization
 - **Entity Framework Core**: Data access with SQLite database
 - **Microsoft Semantic Kernel**: AI orchestration and conversation management
@@ -670,7 +670,7 @@ dotnet run --project WebSpark.ArtSpark.Demo
 #### Docker Deployment
 
 ```dockerfile
-FROM mcr.microsoft.com/dotnet/aspnet:9.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 COPY . /app
 WORKDIR /app
 EXPOSE 80
