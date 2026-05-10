@@ -222,7 +222,7 @@ const CookieManager = {
 
 ### Debug Mode
 
-When running on `artspark.markhazleton.com`, the implementation provides debug information:
+When running on `art.makeboldspark.com`, the implementation provides debug information:
 
 ```javascript
 console.log('WebSpark Theme System Initialized');

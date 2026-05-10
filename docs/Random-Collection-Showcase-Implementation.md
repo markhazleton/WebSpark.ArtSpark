@@ -5,7 +5,7 @@
 **Feature**: Random Collection Showcase on Home Page  
 **Date**: June 6, 2025  
 **Status**: ✅ **COMPLETE** - Fully operational and tested  
-**Application URL**: <https://artspark.markhazleton.com>
+**Application URL**: <https://art.makeboldspark.com>
 
 ---
 
@@ -271,7 +271,7 @@ public class HomeController : Controller
 
 ### **Environment Status**
 
-- ✅ **Development**: Fully operational at `https://artspark.markhazleton.com`
+- ✅ **Development**: Fully operational at `https://art.makeboldspark.com`
 - ✅ **Build Process**: Zero compilation errors
 - ✅ **Runtime**: No exceptions or warnings (EF warnings resolved)
 - ✅ **Testing**: Manual testing completed successfully

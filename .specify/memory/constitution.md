@@ -26,7 +26,7 @@ site. Supporting projects MAY change only when the work demonstrably benefits th
 experience, resiliency, or delivery pipeline. If implementation begins outside the Demo (for
 example inside the client or agent libraries) the plan MUST include the Demo integration path prior
 to merge. This keeps the repository centered on the public experience delivered at
-https://artspark.markhazleton.com.
+https://art.makeboldspark.com.
 
 ### Contract-Stable Shared Libraries
 `WebSpark.ArtSpark.Client`, `WebSpark.ArtSpark.Agent`, and `WebSpark.ArtSpark.Console` exist to serve

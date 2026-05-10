@@ -89,7 +89,7 @@ Updated the following pages to include the new search bar:
 ## Testing Performed
 
 - ✅ Build successful with no compilation errors
-- ✅ Application starts correctly on artspark.markhazleton.com
+- ✅ Application starts correctly on art.makeboldspark.com
 - ✅ Search component renders properly
 - ✅ Responsive design verified
 - ✅ Search functionality maintained

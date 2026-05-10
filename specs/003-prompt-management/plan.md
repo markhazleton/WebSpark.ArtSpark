@@ -14,7 +14,7 @@ Load each persona’s system prompt from markdown files located under `prompts/a
 **Primary Dependencies**: ASP.NET Core, Microsoft Semantic Kernel, Serilog, Polly, WebSpark.ArtSpark.Agent, WebSpark.ArtSpark.Client  
 **Storage**: SQLite via EF Core migrations (no schema changes; prompt files stored on web server file system)  
 **Testing**: `dotnet test WebSpark.ArtSpark.Tests`; targeted Agent unit tests (`PromptLoaderTests`, `PersonaFactoryTests`, `PromptTemplateTokenTests`, `PromptOptionsValidationTests`, `PromptLoaderHotReloadTests`, `PromptAuditLoggingTests`) and Demo integration tests for prompt fallback  
-**Target Platform**: ASP.NET Core web app deployed to https://artspark.markhazleton.com  
+**Target Platform**: ASP.NET Core web app deployed to https://art.makeboldspark.com  
 **Project Type**: Multi-project .NET solution centered on `WebSpark.ArtSpark.Demo`  
 **Performance Goals**: Prompt load duration < 50 ms per persona during initialization; no increase to chat request latency beyond existing budgets  
 **Constraints**: Production prompt files editable on Demo web server (`prompts/agents/`); strict token validation triggers fallback; hot reload disabled in production by default; metadata overrides must map to OpenAI configuration surface  

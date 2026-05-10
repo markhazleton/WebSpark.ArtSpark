@@ -13,7 +13,7 @@ WebSpark.ArtSpark is a modern, open-source ASP.NET Core application that beautif
 
 ## 🚀 Live Demo
 
-Experience WebSpark.ArtSpark live at: **[https://artspark.markhazleton.com](https://artspark.markhazleton.com)**
+Experience WebSpark.ArtSpark live at: **[https://art.makeboldspark.com](https://art.makeboldspark.com)**
 
 ---
 
@@ -159,7 +159,7 @@ dotnet run --project WebSpark.ArtSpark.Demo
 
 Then visit `http://localhost:5139` or `https://localhost:7282` in your browser.
 
-For the live production version, visit: **[https://artspark.markhazleton.com](https://artspark.markhazleton.com)**
+For the live production version, visit: **[https://art.makeboldspark.com](https://art.makeboldspark.com)**
 
 ---
 

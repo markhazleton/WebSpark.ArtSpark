@@ -6,7 +6,7 @@ info:
     Contract additions for enhanced registration, profile photo management, role-based access,
     and admin user management within WebSpark.ArtSpark.Demo.
 servers:
-  - url: https://artspark.markhazleton.com
+  - url: https://art.makeboldspark.com
 paths:
   /account/register:
     post:

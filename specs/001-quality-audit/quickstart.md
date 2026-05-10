@@ -48,7 +48,7 @@ pwsh -File scripts/audit/run-quality-audit.ps1 -Severity Error
 - Copy planned items into `docs/Documentation-Update-Summary.md` and the feature backlog
 
 ## 5. Optional: Trigger via Internal API
-- POST `https://artspark.markhazleton.com/internal/quality-audit/run` (bearer token required)
+- POST `https://art.makeboldspark.com/internal/quality-audit/run` (bearer token required)
 - Poll `GET /internal/quality-audit/reports/{reportId}` until the report status is available
 
 ## 6. Verify Observability Artifacts

@@ -5,7 +5,7 @@
 **Project**: WebSpark.ArtSpark.Demo - Art Museum Experience Platform  
 **Date**: June 6, 2025  
 **Status**: ✅ **COMPLETE** - All objectives achieved + Revolutionary AI Features + Dynamic Collection Showcase  
-**Application URL**: <https://artspark.markhazleton.com>
+**Application URL**: <https://art.makeboldspark.com>
 
 ---
 
@@ -316,7 +316,7 @@ The mobile-first navigation implementation for WebSpark.ArtSpark.Demo has been *
 - ✅ **Cross-device compatibility** verified and tested
 - ✅ **Production ready** with comprehensive documentation
 
-The application is now running successfully at **<https://artspark.markhazleton.com>** with a significantly improved user experience across all device types.
+The application is now running successfully at **<https://art.makeboldspark.com>** with a significantly improved user experience across all device types.
 
 ---
 

@@ -14,7 +14,7 @@ Deliver a repository-wide quality audit workflow that inventories build errors/w
 **Primary Dependencies**: .NET SDK CLI, NuGet CLI APIs, npm CLI, Serilog instrumentation hooks, existing WebSpark.ArtSpark solution build pipelines  
 **Storage**: No persistent storage changes; audit artifacts stored as Markdown under `docs/copilot/YYYY-MM-DD/`  
 **Testing**: `dotnet test` for impacted projects plus validation scripts to ensure audit command exits cleanly; targeted lint/test runs for npm workspaces if present  
-**Target Platform**: ASP.NET Core Demo deployed to artspark.markhazleton.com with local/CI execution of audit recipe  
+**Target Platform**: ASP.NET Core Demo deployed to art.makeboldspark.com with local/CI execution of audit recipe  
 **Project Type**: Multi-project .NET solution centered on `WebSpark.ArtSpark.Demo`  
 **Performance Goals**: Audit execution completes within 15 minutes on CI hardware and under 10 minutes locally, enabling maintainers to iterate during a single session  
 **Constraints**: Rely on approved package feeds (NuGet.org, npmjs.org); avoid automated upgrades that break semantic versioning or Demo runtime stability  

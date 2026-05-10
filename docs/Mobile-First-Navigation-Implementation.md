@@ -28,7 +28,7 @@ This document outlines the comprehensive mobile-first navigation redesign implem
 
 ### ✅ Live Testing Status
 
-- **Application Status**: ✅ Running successfully on <https://artspark.markhazleton.com>
+- **Application Status**: ✅ Running successfully on <https://art.makeboldspark.com>
 - **Build Status**: ✅ No compilation errors detected
 - **Basic Functionality**: ✅ Navigation loads and renders correctly
 - **Nested Dropdown Fix**: ✅ Theme switcher no longer closes main navigation

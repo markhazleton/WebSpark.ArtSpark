@@ -7,7 +7,7 @@ info:
     generated Markdown reports that summarize build diagnostics, dependency currency,
     and safeguard checks for WebSpark.ArtSpark.Demo.
 servers:
-  - url: https://artspark.markhazleton.com/internal
+  - url: https://art.makeboldspark.com/internal
     description: Demo deployment (authenticated maintainers only)
 paths:
   /quality-audit/run:

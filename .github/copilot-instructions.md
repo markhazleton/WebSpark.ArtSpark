@@ -1,7 +1,7 @@
 # Copilot Instructions for WebSpark.ArtSpark
 
 ## Project Mission
-WebSpark.ArtSpark is a **.NET 10 (Preview)** multi-project solution centered on the public web experience at https://artspark.markhazleton.com (`WebSpark.ArtSpark.Demo`). The solution provides a complete .NET ecosystem for the Art Institute of Chicago API with revolutionary AI chat capabilities featuring four distinct personas.
+WebSpark.ArtSpark is a **.NET 10 (Preview)** multi-project solution centered on the public web experience at https://art.makeboldspark.com (`WebSpark.ArtSpark.Demo`). The solution provides a complete .NET ecosystem for the Art Institute of Chicago API with revolutionary AI chat capabilities featuring four distinct personas.
 
 **Project Hierarchy**: Demo → Agent/Client; Agent → Client; Console → Client. All supporting libraries exist to serve the Demo—articulate Demo impact before touching library contracts.
 

@@ -258,4 +258,4 @@ The solution is production-ready and provides a solid foundation for future enha
 **Implementation Date**: May 31, 2025  
 **Version**: 1.1  
 **Status**: ✅ Complete and Tested  
-**Application URL**: <https://artspark.markhazleton.com>
+**Application URL**: <https://art.makeboldspark.com>

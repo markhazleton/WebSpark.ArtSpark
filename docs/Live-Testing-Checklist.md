@@ -2,7 +2,7 @@
 
 ## Testing Environment
 
-- **Application URL**: <https://artspark.markhazleton.com>
+- **Application URL**: <https://art.makeboldspark.com>
 - **Framework**: ASP.NET Core with Bootstrap 5
 - **Testing Date**: Current
 - **Status**: ✅ Application Running Successfully

@@ -5,7 +5,14 @@
 [![.NET](https://img.shields.io/badge/.NET-10.0-purple.svg)](https://dotnet.microsoft.com/download)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-🚀 **[Live Demo: https://artspark.markhazleton.com](https://artspark.markhazleton.com)**
+**Live Site**: [Art.makeboldspark.com](https://Art.makeboldspark.com)
+
+## About
+
+WebSpark.ArtSpark demonstrates a complete .NET ecosystem for the Art Institute of Chicago's public API, featuring a full client library, AI chat with multiple personas (Artwork, Artist, Curator, Historian), and a live demo application showcasing modern .NET development practices including Semantic Kernel, OpenAI Vision, and ASP.NET Core Identity.
+
+> Built by [Mark Hazleton](https://markhazleton.com) — Technical Solutions Architect
+> Part of the [MakeBoldSpark](https://makeboldspark.com) portfolio of technical demonstrations.
 
 ## Table of Contents
 
@@ -73,7 +80,7 @@ This solution provides a complete .NET ecosystem for interacting with the Art In
 
 ### Try the Live Demo
 
-🌐 **[Experience WebSpark.ArtSpark live at artspark.markhazleton.com](https://artspark.markhazleton.com)**
+🌐 **[Experience WebSpark.ArtSpark live at Art.makeboldspark.com](https://Art.makeboldspark.com)**
 
 ### Local Installation
 
@@ -442,7 +449,7 @@ public class ArtworkController : ControllerBase
 
 ### Demo Experience
 
-Experience the interactive chat feature in our [live demo application](https://artspark.markhazleton.com) where you can:
+Experience the interactive chat feature in our [live demo application](https://Art.makeboldspark.com) where you can:
 
 - Switch between different personas seamlessly
 - View suggested conversation starters for each persona
@@ -655,7 +662,7 @@ For applications using the AI chat features:
 
 The WebSpark.ArtSpark application is currently running live at:
 
-**🌐 [https://artspark.markhazleton.com](https://artspark.markhazleton.com)**
+**🌐 [https://Art.makeboldspark.com](https://Art.makeboldspark.com)**
 
 ### Environment Setup
 
@@ -767,7 +774,7 @@ This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.t
 
 🎨 **Ready to explore art and technology together?**
 
-👉 **Experience the live application**: [artspark.markhazleton.com](https://artspark.markhazleton.com)  
+👉 **Experience the live application**: [Art.makeboldspark.com](https://Art.makeboldspark.com)  
 👨‍💻 **Start building with the API**: Clone this repository and run the examples  
 🎭 **Chat with artworks**: Set up your OpenAI API key and experience AI personas  
 

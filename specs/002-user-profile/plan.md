@@ -19,7 +19,7 @@ Implement profile photo uploads (with resizing and local storage), enhanced regi
 **Primary Dependencies**: ASP.NET Core Identity, Entity Framework Core, Serilog, ImageSharp (or equivalent for resizing), WebSpark.ArtSpark shared libraries  
 **Storage**: SQLite via EF Core migrations (production-ready for single-node Demo; local file system for profile photos and thumbnails)  
 **Testing**: `dotnet test` across `WebSpark.ArtSpark.Tests` focusing on new ProfilePhotoService, RoleManagement, and integration tests for registration/admin flows  
-**Target Platform**: ASP.NET Core web app deployed to artspark.markhazleton.com  
+**Target Platform**: ASP.NET Core web app deployed to art.makeboldspark.com  
 **Project Type**: Multi-project .NET solution centered on `WebSpark.ArtSpark.Demo`  
 **Performance Goals**: Registration completion < 2 minutes; photo processing < 5 seconds/file up to 5MB; Admin user list p95 load time < 1 second (achieved via AsNoTracking projection-based queries per research.md EF optimization strategy); password feedback < 200ms  
 **Constraints**: Profile photos ≤ 5MB, JPEG/PNG/WebP only; bios ≤ 500 characters; thumbnails stored as disk files referenced via relative paths; audit logs retained 1 year via hosted cleanup job; email verification tokens expire in 24 hours; disk usage monitoring alerts when profile storage exceeds configured thresholds  

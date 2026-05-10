@@ -140,7 +140,7 @@ All automated tests deferred to Phase 10:
   "Email": {
     "SmtpHost": "",
     "SmtpPort": 587,
-    "FromAddress": "noreply@artspark.markhazleton.com",
+    "FromAddress": "noreply@art.makeboldspark.com",
     "FromName": "ArtSpark"
   }
 }

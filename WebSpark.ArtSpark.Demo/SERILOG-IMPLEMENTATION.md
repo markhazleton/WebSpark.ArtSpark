@@ -102,7 +102,7 @@ WebSpark.ArtSpark.Demo/
 
 ```
 [2025-05-31 11:22:48.282 -05:00 INF] WebSpark.HttpClientUtility.RequestResult.HttpRequestResultService: CurlCommandSaver initialized with OutputFolder: c:\temp\WebSpark\CsvOutput, BatchProcessing: true
-[2025-05-31 11:22:48.427 -05:00 INF] Microsoft.Hosting.Lifetime: Now listening on: https://artspark.markhazleton.com
+[2025-05-31 11:22:48.427 -05:00 INF] Microsoft.Hosting.Lifetime: Now listening on: https://art.makeboldspark.com
 [2025-05-31 11:22:48.427 -05:00 INF] Microsoft.Hosting.Lifetime: Application started. Press Ctrl+C to shut down.
 ```
 

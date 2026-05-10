@@ -131,7 +131,7 @@ The navigation system implementation has been successfully completed and tested.
 ## Build and Runtime Status
 
 - **Build Status**: ✅ SUCCESS (with unrelated warnings only)
-- **Runtime Status**: ✅ RUNNING (artspark.markhazleton.com)
+- **Runtime Status**: ✅ RUNNING (art.makeboldspark.com)
 - **API Integration**: ✅ WORKING (Art Institute of Chicago API)
 - **Database**: ✅ WORKING (SQLite with EF Core)
 - **Navigation**: ✅ IMPLEMENTED AND VERIFIED

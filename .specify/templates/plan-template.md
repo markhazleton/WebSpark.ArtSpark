@@ -19,7 +19,7 @@
 **Primary Dependencies**: ASP.NET Core, Entity Framework Core, Serilog, WebSpark.ArtSpark libraries (add/remove as needed)  
 **Storage**: SQLite via EF Core migrations (note production overrides if relevant)  
 **Testing**: `dotnet test` targeting affected projects; specify test categories to run  
-**Target Platform**: ASP.NET Core web app deployed to artspark.markhazleton.com  
+**Target Platform**: ASP.NET Core web app deployed to art.makeboldspark.com  
 **Project Type**: Multi-project .NET solution centered on `WebSpark.ArtSpark.Demo`  
 **Performance Goals**: [Document measurable goals, e.g., p95 latency, throughput]  
 **Constraints**: [Record limits such as rate-limit thresholds, memory caps]  
