@@ -42,6 +42,33 @@ body {
   margin-bottom: 60px;
 }
 
+/* Footer contrast guardrails for dark background */
+.app-footer {
+  background-color: #1f2329 !important;
+}
+
+.app-footer,
+.app-footer p,
+.app-footer small,
+.app-footer summary,
+.app-footer strong,
+.app-footer span,
+.app-footer .text-white-50 {
+  color: rgba(248, 249, 250, 0.92) !important;
+}
+
+.app-footer a,
+.app-footer a.link-light,
+.app-footer a.text-decoration-none {
+  color: #f8f9fa !important;
+}
+
+.app-footer a:hover,
+.app-footer a:focus-visible {
+  color: #ffffff !important;
+  text-decoration: underline !important;
+}
+
 /* Form floating label improvements */
 .form-floating > .form-control-plaintext::placeholder,
 .form-floating > .form-control::placeholder {
